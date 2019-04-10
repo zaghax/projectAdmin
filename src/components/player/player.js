@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import YTPlayer from 'react-youtube';
+import NewWindow from 'react-new-window';
 import * as firebase from 'firebase';
 
 
@@ -12,7 +13,8 @@ class Player extends Component {
         playingIndex: 0,
         videoData: {},
         objectKey: '',
-        firstVideoId: ''
+        firstVideoId: '',
+        floatingScreen: false
     }
 
     componentDidMount(){
@@ -47,26 +49,28 @@ class Player extends Component {
     }
 
     onPlayerError = (event) => {
-        console.log('error', event.data)
         this.nextVideo();
     }
 
     playVideo = () => {
         const {YTTarget} = this.state;
         YTTarget.playVideo();
-        console.log('play');
     }
 
     pauseVideo = () => {
         const {YTTarget} = this.state;
         YTTarget.pauseVideo();
-        console.log('pause');
     }
 
     stopVideo = () => {
         const {YTTarget} = this.state;
         YTTarget.stopVideo();
-        console.log('stop');
+    }
+
+    toggleScreen = () => {
+        this.setState({
+            floatingScreen: !this.state.floatingScreen
+        })
     }
 
     loadVideo = () => {
@@ -82,8 +86,6 @@ class Player extends Component {
             objectKey: key
         })
 
-        console.log('load');
-
     }
 
     nextVideo = () => {
@@ -98,8 +100,6 @@ class Player extends Component {
 
             this.loadVideo();
         }
-
-        console.log('next');
     }
 
     previousVideo = () => {
@@ -114,14 +114,10 @@ class Player extends Component {
 
             this.loadVideo();
         }
-
-        console.log('prev');
     }
 
 
     onPlayerStateChange = (event) => {
-
-        console.log(event.data)
 
         const {videoData, objectKey} = this.state;
 
@@ -152,17 +148,44 @@ class Player extends Component {
             }
         };
 
+        const features = {
+            width: 640,
+            height: 390,
+            resizable: true,
+            scrollbars: 0,
+            menubar: 0,
+            toolbar: 0,
+            titlebar: 0
+        }
+
+
         return (
             <div className="player">
-                <YTPlayer
-                    videoId={this.state.firstVideoId}
-                    opts={opts}
-                    onReady={this.onPlayerReady}
-                    onStateChange = {this.onPlayerStateChange}
-                    onError = {this.onPlayerError}
-                />
-            </div>
 
+                {!this.state.floatingScreen && (
+                    <YTPlayer
+                        videoId={this.state.firstVideoId}
+                        opts={opts}
+                        onReady={this.onPlayerReady}
+                        onStateChange = {this.onPlayerStateChange}
+                        onError = {this.onPlayerError}
+                    />
+                )}
+
+                {this.state.floatingScreen && (
+                    <NewWindow features={features}>
+                        <YTPlayer
+                            className="floatingScreen"
+                            videoId={this.state.firstVideoId}
+                            opts={opts}
+                            onReady={this.onPlayerReady}
+                            onStateChange = {this.onPlayerStateChange}
+                            onError = {this.onPlayerError}
+                        />
+                    </NewWindow>
+                )}
+                
+            </div>
         )
 
     }
@@ -172,6 +195,14 @@ class Player extends Component {
         return(
             <div className="adminPlayer">
                 {this.getPlayer()}
+                <div className="playerControls">
+                    <button className="ctrl-btn icon-step-backward" onClick={() => this.previousVideo()}/>
+                    <button className="ctrl-btn icon-play" onClick={() => this.playVideo()}/>
+                    <button className="ctrl-btn icon-pause" onClick={() => this.pauseVideo()}/>
+                    <button className="ctrl-btn icon-stop" onClick={() => this.stopVideo()}/>
+                    <button className="ctrl-btn icon-step-forward" onClick={() => this.nextVideo()}/>
+                    <button className="ctrl-btn icon-spinner2" onClick={() => this.toggleScreen()}/>
+                </div>
             </div>
         )
     }

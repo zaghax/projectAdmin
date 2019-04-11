@@ -13,8 +13,20 @@ class Player extends Component {
         playingIndex: 0,
         videoData: {},
         objectKey: '',
-        firstVideoId: '',
-        floatingScreen: false
+        floatingScreen: false,
+        counter: 0,
+        currentPlayingData: {},
+        progressBarFill: 0,
+        progressBarTimer: 0,
+        intervalTimer: null,
+        videoDuration: 0,
+        stepPercentajeFill: 0
+
+    }
+
+    constructor(props) {
+        super(props);
+        this.intervalTimer = null;
     }
 
     componentDidMount(){
@@ -31,25 +43,48 @@ class Player extends Component {
 
         const refDB = firebase.database().ref();
         const dbRefPlaylist = refDB.child('playlist');
+        const dbRefCurrentPlaying = refDB.child('currentPlaying');
 
         dbRefPlaylist.on('value', snap => {
             this.setState({
                 fullPlayList: snap.val(),
                 playListKeys: Object.keys(snap.val()),
-                firstVideoId: snap.val()[Object.keys(snap.val())[0]].id.videoId
+            }, () => {
+
+                dbRefCurrentPlaying.set({
+                    playing:{
+                        videoData: this.state.fullPlayList[this.state.playListKeys[0]],
+                        objectKey:  this.state.playListKeys[0]
+                    }
+                })
+
+                this.setState({
+                    videoData: this.state.fullPlayList[this.state.playListKeys[0]],
+                    objectKey:  this.state.playListKeys[0]
+                })
+
             })
         });
 
+        dbRefCurrentPlaying.on('value', snap => {
+            this.setState({
+                currentPlayingData: snap.val()
+            })
+        });
+        
     }
 
     onPlayerReady = (event) => {
         this.setState({
             YTTarget: event.target
         })
+
+        console.log(event.target)
     }
 
     onPlayerError = (event) => {
         this.nextVideo();
+        console.log(event)
     }
 
     playVideo = () => {
@@ -85,7 +120,6 @@ class Player extends Component {
             videoData: fullPlayList[key],
             objectKey: key
         })
-
     }
 
     nextVideo = () => {
@@ -95,10 +129,13 @@ class Player extends Component {
         if(playingIndex < playListKeys.length && playingIndex !== playListKeys.length){
 
             this.setState({
-                playingIndex: playingIndex + 1
-            })
+                playingIndex: playingIndex + 1,
+                progressBarFill: 0,
+                progressBarTimer: 0
+            }, () => this.loadVideo())
 
-            this.loadVideo();
+            this.progressBarStatus('stop'); 
+            
         }
     }
 
@@ -109,13 +146,42 @@ class Player extends Component {
         if(playingIndex < playListKeys.length && playingIndex !== playListKeys.length){
 
             this.setState({
-                playingIndex: playingIndex - 1
-            })
+                playingIndex: playingIndex - 1,
+                progressBarFill: 0,
+                progressBarTimer: 0
+            }, () => this.loadVideo())
 
-            this.loadVideo();
         }
     }
 
+
+    progressBarStatus = (flag) => {
+
+        const {YTTarget} = this.state;
+        // const videoDuration = Math.round(YTTarget.getDuration());
+        // const stepPercentajeFill = 100 / videoDuration;
+
+        this.setState({
+            videoDuration: Math.round(YTTarget.getDuration()),
+            stepPercentajeFill: 100 / Math.round(YTTarget.getDuration())
+        })
+
+        if(flag === 'start'){
+            if (this.intervalTimer !== null) return;
+            this.intervalTimer = setInterval(() => {
+                this.setState({
+                    progressBarFill: this.state.progressBarFill + this.state.stepPercentajeFill,
+                    progressBarTimer: this.state.progressBarTimer + 1
+                })
+            }, 1000); 
+        }
+
+        if(flag === 'stop'){
+            clearInterval(this.intervalTimer);
+            this.intervalTimer = null
+        }
+
+    }
 
     onPlayerStateChange = (event) => {
 
@@ -123,17 +189,76 @@ class Player extends Component {
 
         if (event.data === YTPlayer.PlayerState.ENDED) {
             this.nextVideo();
+            this.progressBarStatus('stop'); 
+            this.setState({
+                progressBarFill: 0,
+                progressBarTimer: 0
+            }) 
         }
 
+        if (event.data === YTPlayer.PlayerState.PAUSED) {
+            this.progressBarStatus('stop'); 
+        }
+
+        if (event.data === YTPlayer.PlayerState.CUED) {
+            this.progressBarStatus('stop');
+            this.setState({
+                progressBarFill: 0,
+                progressBarTimer: 0
+            }) 
+        }
+        
         if (event.data === YTPlayer.PlayerState.PLAYING) {
+
             firebase.database().ref().child('currentPlaying').set({
                 playing: {
                     videoData: videoData,
                     objectKey: objectKey
                 }
             })
+
+            this.progressBarStatus('start');
+
         }
+
     }
+
+    infoOffScreenPlayer = () => {
+
+        const {currentPlayingData} = this.state;
+
+        if(currentPlayingData && currentPlayingData.playing !== undefined){
+
+            return (
+                <div className="currentlyPlaying">
+                    <img
+                        className="videoThumnail"
+                        src={currentPlayingData.playing.videoData.snippet.thumbnails.high.url} alt=""/>
+
+                    <div className="playingInfo">
+                        <div className="infoTitle">Currently playing</div>
+                        <div
+                            className="videoName"
+                            dangerouslySetInnerHTML={{ __html: currentPlayingData.playing.videoData.snippet.title }} />
+                    </div>
+
+                </div>
+            )
+
+        }
+
+    }
+
+    seekTo = (event) => {
+        console.log(event.target.value)
+        const {YTTarget, stepPercentajeFill} = this.state;
+        YTTarget.seekTo(event.target.value);
+        this.setState({
+            progressBarTimer: event.target.value,
+            progressBarFill: event.target.value * stepPercentajeFill
+        }, () => console.log(this.state.progressBarTimer))
+    }
+
 
     getPlayer = () => {
 
@@ -158,30 +283,39 @@ class Player extends Component {
             titlebar: 0
         }
 
-
         return (
             <div className="player">
 
-                {!this.state.floatingScreen && (
-                    <YTPlayer
-                        videoId={this.state.firstVideoId}
-                        opts={opts}
-                        onReady={this.onPlayerReady}
-                        onStateChange = {this.onPlayerStateChange}
-                        onError = {this.onPlayerError}
-                    />
-                )}
+                <div className="playerWindow">
 
-                {this.state.floatingScreen && (
-                    <NewWindow features={features}>
+                    {!this.state.floatingScreen && Object.keys(this.state.currentPlayingData).length !== 0 && 
+                        
                         <YTPlayer
-                            className="floatingScreen"
-                            videoId={this.state.firstVideoId}
+                            videoId={this.state.currentPlayingData.playing.videoData.id.videoId}
                             opts={opts}
                             onReady={this.onPlayerReady}
                             onStateChange = {this.onPlayerStateChange}
                             onError = {this.onPlayerError}
                         />
+                            
+                    }
+
+                    {this.state.floatingScreen && this.infoOffScreenPlayer()}
+
+                </div>
+
+                {this.state.floatingScreen && (
+                    <NewWindow features={features}>
+                        {Object.keys(this.state.currentPlayingData).length !== 0 &&  
+                            <YTPlayer
+                            className="floatingScreen"
+                                videoId={this.state.currentPlayingData.playing.videoData.id.videoId}
+                                opts={opts}
+                                onReady={this.onPlayerReady}
+                                onStateChange = {this.onPlayerStateChange}
+                                onError = {this.onPlayerError}
+                            />
+                        }
                     </NewWindow>
                 )}
                 
@@ -196,6 +330,10 @@ class Player extends Component {
             <div className="adminPlayer">
                 {this.getPlayer()}
                 <div className="playerControls">
+                <div className="progressBar">
+                    <div class="bar" style={{width:this.state.progressBarFill + '%'}}/>
+                        <input className="progressBarInput" type="range" min="0" max={this.state.videoDuration} onChange={this.seekTo}/>
+                    </div>
                     <button className="ctrl-btn icon-step-backward" onClick={() => this.previousVideo()}/>
                     <button className="ctrl-btn icon-play" onClick={() => this.playVideo()}/>
                     <button className="ctrl-btn icon-pause" onClick={() => this.pauseVideo()}/>

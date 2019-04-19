@@ -7,6 +7,7 @@ $gray2: #252525
     display: flex
     flex-flow: row wrap
     width: 640px
+    padding: 10px 0
     .ctrl-btn
         background: none
         border: none
@@ -14,14 +15,14 @@ $gray2: #252525
         font-size: 20px
         padding: 10px
         
-.floatingScreen
+.YTPlayer
     position: absolute
     width: 100%
     height: 100%
     top: 0
     left: 0
 
-.playerWindow
+.playerWrapper
     width: 640px
     height: 390px
     position: relative
@@ -70,7 +71,7 @@ $gray2: #252525
 .progressBar
     display: block
     width: 100%
-    height: 10px
+    height: 5px
     position: relative
     background: rgba(255,255,255,0.1)
     .bar
@@ -79,13 +80,25 @@ $gray2: #252525
         top: 0
         left: 0
         background: $wt
+        &:after
+            content: ''
+            display: block
+            width: 12px
+            height: 12px
+            border-radius: 50%
+            background: $wt
+            position: absolute
+            right: -6px
+            top: 50%
+            opacity: 0
+            transform: translateY(-50%)
+            transition: opacity 150ms ease-in-out 
         
     .progressBarInput
         position: absolute
-        
         -webkit-appearance: none
         width: 100%
-        height: 10px
+        height: 5px
         top: 0
         left: 0
         background: none
@@ -102,15 +115,21 @@ $gray2: #252525
         &::-webkit-slider-thumb 
             -webkit-appearance: none
             appearance: none
-            width: 1px
+            width: 0px
             height: 10px
-            background: $wt
+            background: transparent
             cursor: pointer
         
         &::-moz-range-thumb
-            width: 1px
+            width: 0px
             height: 10px
-            background: $wt
+            background: transparent
             cursor: pointer
+
+    &:hover
+        .bar
+            &:after
+                opacity: 1
+
         
 

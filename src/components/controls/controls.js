@@ -27,7 +27,6 @@ class Controls extends Component {
         playListKeys: [],
         videoData: {},
         objectKey: '',
-        currentPlayingData: {},
         playingIndex: 0,
         floatingScreen: false,
         //Progressbar
@@ -35,6 +34,11 @@ class Controls extends Component {
         stepPercentajeFill: 0,
         progressBarFill: 0,
         progressBarTimer: 0,
+        //Timer
+        videoLenght: '0:00',
+        videoRemaining: '0:00',
+        //Player
+        playPauseStatus: false
     }
 
     constructor(props) {
@@ -43,7 +47,7 @@ class Controls extends Component {
     }
 
     componentDidMount(){
-         
+        
         const config = {
             apiKey: "AIzaSyCkwdRv1u2LSarAY152iZgWL3H5RroueqM",
             authDomain: "playlist-ca585.firebaseapp.com",
@@ -81,13 +85,6 @@ class Controls extends Component {
             })
         });
 
-
-        dbRefCurrentPlaying.on('value', snap => {
-            this.setState({
-                currentPlayingData: snap.val()
-            })
-        });
-
         ipcRenderer.on(TRIGGER_NEXT_VIDEO, () => {
             this.triggerNextVideo();
         });
@@ -98,10 +95,13 @@ class Controls extends Component {
 
         ipcRenderer.on(PLAYER_READY, () => {
             if(this.state.floatingScreen){
-                ipcRenderer.send(LOAD_VIDEO, this.state.videoData.id.videoId )
+                ipcRenderer.send(LOAD_VIDEO, this.state.videoData.id.videoId );
             }else{
                 this.child.loadVideo(this.state.videoData.id.videoId);
             }
+            this.setState({
+                playPauseStatus: true
+            });
         });
 
         ipcRenderer.on(PLAYER_WINDOW_CLOSED, () => {
@@ -112,16 +112,24 @@ class Controls extends Component {
         });
     }
 
-    playVideo = () => {
-        this.state.floatingScreen ?  ipcRenderer.send(PLAY_VIDEO) : this.child.playVideo();
-    }
-
-    pauseVideo = () => {
-        this.state.floatingScreen ?  ipcRenderer.send(PAUSE_VIDEO) : this.child.pauseVideo();
+    switchPlayPause = () => {
+        this.setState({
+            playPauseStatus: !this.state.playPauseStatus
+        }, () => {
+            if(this.state.playPauseStatus){
+                this.state.floatingScreen ?  ipcRenderer.send(PLAY_VIDEO) : this.child.playVideo();
+            }else{
+                this.state.floatingScreen ?  ipcRenderer.send(PAUSE_VIDEO) : this.child.pauseVideo();
+            }
+        })
     }
 
     stopVideo = () => {
-        this.state.floatingScreen ?  ipcRenderer.send(STOP_VIDEO) : this.child.stopVideo();;
+        this.state.floatingScreen ?  ipcRenderer.send(STOP_VIDEO) : this.child.stopVideo();
+        this.setState({
+            playPauseStatus: false,
+            videoRemaining: '0:00'
+        })
     }
 
     toggleScreen = () => {
@@ -139,22 +147,22 @@ class Controls extends Component {
 
     loadVideo = () => {
 
-        const {playListKeys, playingIndex, fullPlayList} = this.state;
-
+        const {playListKeys, playingIndex, fullPlayList, floatingScreen} = this.state;
         const key = playListKeys[playingIndex];
 
-        this.state.floatingScreen ?  ipcRenderer.send(LOAD_VIDEO, fullPlayList[key].id.videoId ) : this.child.loadVideo(fullPlayList[key].id.videoId);
+        floatingScreen ?  ipcRenderer.send(LOAD_VIDEO, fullPlayList[key].id.videoId ) : this.child.loadVideo(fullPlayList[key].id.videoId);
 
         this.setState({
             videoData: fullPlayList[key],
-            objectKey: key
+            objectKey: key,
+            playPauseStatus: true
         })
         
     }
 
     seekTo = (event) => {
-        const { stepPercentajeFill } = this.state;
-        this.state.floatingScreen ?  ipcRenderer.send(SEEK_TO, event.target.value ) : this.child.seekTo(event.target.value);
+        const { stepPercentajeFill, floatingScreen } = this.state;
+        floatingScreen ?  ipcRenderer.send(SEEK_TO, event.target.value ) : this.child.seekTo(event.target.value);
         this.setState({
             progressBarTimer: event.target.value,
             progressBarFill: event.target.value * stepPercentajeFill
@@ -168,13 +176,14 @@ class Controls extends Component {
     nextVideo = () => {
 
         const {playListKeys, playingIndex} = this.state;
+        const totalVideos = playListKeys.length - 1; 
 
-        if(playingIndex < playListKeys.length && playingIndex !== playListKeys.length){
+        if(playingIndex < totalVideos){
 
             this.setState({
                 playingIndex: playingIndex + 1
             }, () => {
-                this.loadVideo()
+                this.loadVideo();
             })
 
             this.updateProgressBar('stoped'); 
@@ -185,9 +194,9 @@ class Controls extends Component {
 
     previousVideo = () => {
 
-        const {playListKeys, playingIndex} = this.state;
+        const { playingIndex } = this.state;
 
-        if(playingIndex < playListKeys.length && playingIndex !== playListKeys.length){
+        if(playingIndex !== 0){
 
             this.setState({
                 playingIndex: playingIndex - 1
@@ -199,13 +208,31 @@ class Controls extends Component {
 
     }
 
-    updateProgressBar = (videoState, videoDuration) => {
+    formatTime(time) {   
+
+        let hrs = ~~(time / 3600);
+        let mins = ~~((time % 3600) / 60);
+        let secs = ~~time % 60;
+        let timeFormated = "";
+
+        if (hrs > 0) {
+            timeFormated += "" + hrs + ":" + (mins < 10 ? "0" : "");
+        }
+
+        timeFormated += "" + mins + ":" + (secs < 10 ? "0" : "");
+        timeFormated += "" + secs;
+
+        return timeFormated;
+    }
+
+    updateProgressBar = (videoState, videoDuration, videoRemaining) => {
 
         const {videoData, objectKey} = this.state;
 
         this.setState({
             videoDuration: videoDuration,
-            stepPercentajeFill: 100 / videoDuration
+            stepPercentajeFill: 100 / videoDuration,
+            videoLenght: this.formatTime(videoDuration)
         })
 
         if(videoState === 'playing'){
@@ -213,7 +240,9 @@ class Controls extends Component {
             this.intervalTimer = setInterval(() => {
                 this.setState({
                     progressBarFill: this.state.progressBarFill + this.state.stepPercentajeFill,
-                    progressBarTimer: this.state.progressBarTimer + 1
+                    progressBarTimer: parseInt(this.state.progressBarTimer) + 1,
+                    videoRemaining: this.formatTime(this.state.progressBarTimer),
+                    playPauseStatus: true
                 })
             }, 1000); 
             firebase.database().ref().child('currentPlaying').set({
@@ -241,45 +270,43 @@ class Controls extends Component {
 
     infoOffScreenPlayer = () => {
 
-        const {currentPlayingData} = this.state;
+        const { videoData } = this.state;
 
-        if(currentPlayingData && currentPlayingData.playing !== undefined){
+        return (
+            <div className="currentlyPlaying">
+                <img
+                    className="videoThumnail"
+                    src={videoData.snippet.thumbnails.high.url} alt=""/>
 
-            return (
-                <div className="currentlyPlaying">
-                    <img
-                        className="videoThumnail"
-                        src={currentPlayingData.playing.videoData.snippet.thumbnails.high.url} alt=""/>
-
-                    <div className="playingInfo">
-                        <div className="infoTitle">Currently playing</div>
-                        <div
-                            className="videoName"
-                            dangerouslySetInnerHTML={{ __html: currentPlayingData.playing.videoData.snippet.title }} />
-                    </div>
-
+                <div className="playingInfo">
+                    <div className="infoTitle">Currently playing</div>
+                    <div
+                        className="videoName"
+                        dangerouslySetInnerHTML={{ __html: videoData.snippet.title }} />
                 </div>
-            )
 
-        }
+            </div>
+        )
 
     }
-
+    
     getControls = () => {
 
         return (
             <div className="playerControls">
+                <div className="videoTime">
+                    <span className="videoRemainingTime">{this.state.videoRemaining}</span>
+                    <span className="videoLenghtTime">{this.state.videoLenght}</span>
+                </div>
                 <div className="progressBar">
                     <div className="bar" style={{width:this.state.progressBarFill + '%'}}/>
                     <input className="progressBarInput" type="range" min="0" max={this.state.videoDuration} onChange={this.seekTo}/>
                 </div>
                 <div className="controlsButtonGroup">
-                    <button className="ctrl-btn icon-step-backward" onClick={this.previousVideo}/>
-                    <button className="ctrl-btn icon-play" onClick={this.playVideo}/>
-                    <button className="ctrl-btn icon-pause" onClick={this.pauseVideo}/>
-                    <button className="ctrl-btn icon-stop" onClick={this.stopVideo}/>
-                    <button className="ctrl-btn icon-step-forward" onClick={this.nextVideo}/>
-                    <button className="ctrl-btn icon-spinner2" onClick={this.toggleScreen}/>
+                    <button className="ctrl-btn icon-skip-back" onClick={this.previousVideo}/>
+                    <button className={`ctrl-btn player-toggle ${this.state.playPauseStatus ? 'icon-pause' : 'icon-play'}`} onClick={this.switchPlayPause}/>
+                    <button className="ctrl-btn icon-skip-forward" onClick={this.nextVideo}/>
+                    <button className={`ctrl-btn screen-toggle ${this.state.floatingScreen ? 'icon-minimize' : 'icon-maximize'}`} onClick={this.toggleScreen}/>
                 </div>
             </div>
         )

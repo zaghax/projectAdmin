@@ -38,7 +38,8 @@ class Controls extends Component {
         videoLenght: '0:00',
         videoRemaining: '0:00',
         //Player
-        playPauseStatus: false
+        playPauseStatus: false,
+        loadOnce: true
     }
 
     constructor(props) {
@@ -70,17 +71,22 @@ class Controls extends Component {
                 playListKeys: Object.keys(snap.val()),
             }, () => {
 
-                dbRefCurrentPlaying.set({
-                    playing:{
-                        videoData: this.state.fullPlayList[this.state.playListKeys[0]],
-                        objectKey:  this.state.playListKeys[0]
-                    }
-                })
+                if ( this.state.loadOnce ) {
 
-                this.setState({
-                    videoData: this.state.fullPlayList[this.state.playListKeys[0]],
-                    objectKey:  this.state.playListKeys[0]
-                })
+                    dbRefCurrentPlaying.set({
+                        playing:{
+                            videoData: this.state.fullPlayList[this.state.playListKeys[0]],
+                            objectKey:  this.state.playListKeys[0]
+                        }
+                    })
+    
+                    this.setState({
+                        videoData: this.state.fullPlayList[this.state.playListKeys[0]],
+                        objectKey: this.state.playListKeys[0],
+                        loadOnce: false
+                    });
+
+                }
 
             })
         });

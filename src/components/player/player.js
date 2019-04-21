@@ -125,7 +125,9 @@ class Player extends Component {
                 rel: 0,
                 fs : 1,
                 showinfo: 0,
-                controls: 0
+                controls: 0,
+                iv_load_policy: 3,
+                modestbranding: 1
             }
         };
 

@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import Controls from '../controls/controls';
+import PlayerControls from '../playerControls/playerControls';
 
 class AppContainer extends Component {
 
     render(){        
         return(
             <div className="AppContainer">
-                <Controls/>
+                <PlayerControls/>
             </div>
         )
     }

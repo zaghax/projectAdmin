@@ -1,12 +1,12 @@
 const initialState = {
-    videoDuration: 0
+    searchResults: []
 }
 
 const reducer = (state = initialState, action) => {
 
-    if(action.type === 'SET_VIDEO_DURATION'){
+    if(action.type === 'SET_SEARCH_RESULTS'){
         return {
-            videoDuration: action.value
+            searchResults: action.value
         }
     }
 

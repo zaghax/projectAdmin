@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import * as firebase from 'firebase';
 import Player from '../player/player';
+import SearchVideos from '../searchVideos/searchVideos';
 const { ipcRenderer } = window.require('electron');
 
 const {
@@ -309,6 +310,7 @@ class Controls extends Component {
                     <input className="progressBarInput" type="range" min="0" max={this.state.videoDuration} onChange={this.seekTo}/>
                 </div>
                 <div className="controlsButtonGroup">
+                    <SearchVideos/>
                     <button className="ctrl-btn icon-skip-back" onClick={this.previousVideo}/>
                     <button className={`ctrl-btn player-toggle ${this.state.playPauseStatus ? 'icon-pause' : 'icon-play'}`} onClick={this.switchPlayPause}/>
                     <button className="ctrl-btn icon-skip-forward" onClick={this.nextVideo}/>

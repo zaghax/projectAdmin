@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import * as firebase from 'firebase';
 import Player from '../player/player';
 import SearchVideos from '../searchVideos/searchVideos';
+import {dbRefCurrentPlaying} from '../appContainer/appContainer';
 const { ipcRenderer } = window.require('electron');
 
 const {
@@ -17,24 +17,19 @@ const {
     SET_PROGRESS_BAR_STATUS,
     SEEK_TO,
     PLAYER_READY
-
 } = require('../../utils/constants');
 
 class Controls extends Component {
 
     state = {
         //Playlist
-        fullPlayList: {},
-        playListKeys: [],
-        videoData: {},
-        objectKey: '',
         playingIndex: 0,
         floatingScreen: false,
         //Progressbar
         videoDuration: 0,
         stepPercentajeFill: 0,
         progressBarFill: 0,
-        progressBarTimer: 0,
+        progressBarTimer: 0, 
         //Timer
         videoLenght: '0:00',
         videoRemaining: '0:00',
@@ -49,48 +44,6 @@ class Controls extends Component {
     }
 
     componentDidMount(){
-        
-        const config = {
-            apiKey: "AIzaSyCkwdRv1u2LSarAY152iZgWL3H5RroueqM",
-            authDomain: "playlist-ca585.firebaseapp.com",
-            databaseURL: "https://playlist-ca585.firebaseio.com",
-            projectId: "playlist-ca585",
-            storageBucket: "playlist-ca585.appspot.com",
-            messagingSenderId: "850788790457"
-        }
-
-        firebase.initializeApp(config);
-
-        const refDB = firebase.database().ref();
-        const dbRefPlaylist = refDB.child('playlist');
-        const dbRefCurrentPlaying = refDB.child('currentPlaying');
-
-        dbRefPlaylist.on('value', snap => {
-
-            this.setState({
-                fullPlayList: snap.val(),
-                playListKeys: Object.keys(snap.val()),
-            }, () => {
-
-                if ( this.state.loadOnce ) {
-
-                    dbRefCurrentPlaying.set({
-                        playing:{
-                            videoData: this.state.fullPlayList[this.state.playListKeys[0]],
-                            objectKey:  this.state.playListKeys[0]
-                        }
-                    })
-    
-                    this.setState({
-                        videoData: this.state.fullPlayList[this.state.playListKeys[0]],
-                        objectKey: this.state.playListKeys[0],
-                        loadOnce: false
-                    });
-
-                }
-
-            })
-        });
 
         ipcRenderer.on(TRIGGER_NEXT_VIDEO, () => {
             this.triggerNextVideo();
@@ -102,9 +55,9 @@ class Controls extends Component {
 
         ipcRenderer.on(PLAYER_READY, () => {
             if(this.state.floatingScreen){
-                ipcRenderer.send(LOAD_VIDEO, this.state.videoData.id.videoId );
+                ipcRenderer.send(LOAD_VIDEO, this.props.currentVideoData.id.videoId );
             }else{
-                this.child.loadVideo(this.state.videoData.id.videoId);
+                this.child.loadVideo(this.props.currentVideoData.id.videoId);
             }
             this.setState({
                 playPauseStatus: true
@@ -154,17 +107,19 @@ class Controls extends Component {
 
     loadVideo = () => {
 
-        const {playListKeys, playingIndex, fullPlayList, floatingScreen} = this.state;
+        const {playingIndex, floatingScreen} = this.state;
+        const {playListKeys, fullPlayList} = this.props;
         const key = playListKeys[playingIndex];
 
         floatingScreen ?  ipcRenderer.send(LOAD_VIDEO, fullPlayList[key].id.videoId ) : this.child.loadVideo(fullPlayList[key].id.videoId);
 
+        this.props.setCurrentVideoData(fullPlayList[key]);
+        this.props.setCurrentObjectKey(key);
+
         this.setState({
-            videoData: fullPlayList[key],
-            objectKey: key,
             playPauseStatus: true
         })
-        
+
     }
 
     seekTo = (event) => {
@@ -182,7 +137,8 @@ class Controls extends Component {
 
     nextVideo = () => {
 
-        const {playListKeys, playingIndex} = this.state;
+        const {playingIndex} = this.state;
+        const {playListKeys} = this.props;
         const totalVideos = playListKeys.length - 1; 
 
         if(playingIndex < totalVideos){
@@ -232,9 +188,9 @@ class Controls extends Component {
         return timeFormated;
     }
 
-    updateProgressBar = (videoState, videoDuration, videoRemaining) => {
+    updateProgressBar = (videoState, videoDuration) => {
 
-        const {videoData, objectKey} = this.state;
+        const {currentVideoData, currentObjectKey} = this.props;
 
         this.setState({
             videoDuration: videoDuration,
@@ -252,10 +208,10 @@ class Controls extends Component {
                     playPauseStatus: true
                 })
             }, 1000); 
-            firebase.database().ref().child('currentPlaying').set({
+            dbRefCurrentPlaying.set({
                 playing: {
-                    videoData: videoData,
-                    objectKey: objectKey
+                    videoData: currentVideoData,
+                    objectKey: currentObjectKey
                 }
             })
         }
@@ -277,21 +233,20 @@ class Controls extends Component {
 
     infoOffScreenPlayer = () => {
 
-        const { videoData } = this.state;
+        const { currentVideoData } = this.props;
 
         return (
             <div className="currentlyPlaying">
                 <img
                     className="videoThumnail"
-                    src={videoData.snippet.thumbnails.high.url} alt=""/>
+                    src={currentVideoData.snippet.thumbnails.high.url} alt=""/>
 
                 <div className="playingInfo">
                     <div className="infoTitle">Currently playing</div>
                     <div
                         className="videoName"
-                        dangerouslySetInnerHTML={{ __html: videoData.snippet.title }} />
+                        dangerouslySetInnerHTML={{ __html: currentVideoData.snippet.title }} />
                 </div>
-
             </div>
         )
 
@@ -348,13 +303,17 @@ class Controls extends Component {
 
 const mapStateToProps = state => {
     return {
-        videoDuration: state.videoDuration
+        fullPlayList: state.fullPlayList,
+        playListKeys: state.playListKeys,
+        currentVideoData: state.currentVideoData,
+        currentObjectKey: state.currentObjectKey
     }
 }
 
 const mapDispathToProps = dispatch => {
     return {
-        setVideoDuration: (value) => dispatch({type: 'SET_VIDEO_DURATION', value: value})
+        setCurrentVideoData: (value) => dispatch({type: 'SET_CURRENT_VIDEO_DATA', value: value}),
+        setCurrentObjectKey: (value) => dispatch({type: 'SET_CURRENT_OBJECT_KEY', value: value})
     }
 }
 

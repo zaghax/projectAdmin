@@ -1,8 +1,14 @@
 import React , {Component} from 'react';
-import {connect} from 'react-redux'
-
+import {connect} from 'react-redux';
+import {dbRefPlaylist} from '../appContainer/appContainer';
 
 class SearchResults extends Component {
+
+    addPlaylistItem = (item) => {
+
+        dbRefPlaylist.push(item);
+        
+    }
 
     printVideos = (videos) => {
 
@@ -15,9 +21,7 @@ class SearchResults extends Component {
 
                         <div className="imageWrapper">
                             <img className="videoImage" src={item.snippet.thumbnails.medium.url} alt=""/>
-                            <button className="icon-plus addVideo" >
-                                {/* onClick={() => { this.addPlaylistItem(item)}} */}
-                            </button>
+                            <button className="icon-plus addVideo" onClick={() => { this.addPlaylistItem(item)}}/>
                         </div>
 
                         <div className="videoTitle" >
@@ -39,6 +43,7 @@ class SearchResults extends Component {
             </div>
         )
     }
+
 }
 
 const mapStateToProps = state => {

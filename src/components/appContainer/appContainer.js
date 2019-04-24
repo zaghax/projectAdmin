@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import PlayerControls from '../playerControls/playerControls';
-// import SuggestedVideos from '../suggestedVideos/suggestedVideos';
+import SuggestedVideos from '../suggestedVideos/suggestedVideos';
 import SearchResults from '../searchResults/searchResults';
+import PlayList from '../playList/playList';
 import * as firebase from 'firebase';
 import {connect} from 'react-redux';
 
@@ -65,8 +66,14 @@ class AppContainer extends Component {
             <div className="AppContainer">
                 {this.state.showComponents && (
                     <div className="componentsWrap">
-                        <PlayerControls/>
-                        <SearchResults/>
+                        <div className="left">
+                            <PlayerControls/>
+                            {/* <SearchResults/> */}
+                            <SuggestedVideos/>
+                        </div>
+                        <div className="right">
+                            <PlayList/>
+                        </div>
                     </div>
                 )} 
             </div>

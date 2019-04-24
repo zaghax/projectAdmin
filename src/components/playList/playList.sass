@@ -1,0 +1,109 @@
+.playList
+    padding: 10px
+    background: rgba($wt, 0.2)
+    .head
+        background: #000000
+        padding: 5px
+        text-align: center
+        span
+            color: rgba($wt, 0.5)
+            text-transform: uppercase
+            font-size: 14px
+            letter-spacing: 4px
+            font-weight: 100
+    .item__list
+        width: 100%
+        height: calc(100vh - 48px)
+        overflow-y: scroll
+        .item
+            width: 100%
+            background: rgba($bl, 0.4)
+            position: relative
+            display: flex
+            flex-flow: row wrap
+            align-items: center
+            padding: 10px 0
+            border-bottom: 1px solid rgba($wt, 0.5)
+            opacity: 0
+            @for $i from 1 through 50
+                &:nth-child(#{$i})
+                    animation: fade 1s $i * 100ms ease-in-out
+                    animation-fill-mode: forwards
+                    
+            &__image
+                width: 40%
+                img
+                    width: 100%
+                    display: block
+
+            &__title
+                width: 50%
+                padding: 5px
+                min-height: 60px
+                overflow: hidden
+                display: flex
+                align-items: center
+                p
+                    color: rgba($wt, 0.8)
+                    margin: 0
+                    padding: 0
+                    font-size: 12px
+
+            &__controls
+                width: 10%
+
+            &__remove
+                background: none
+                border: none
+                margin: 0
+                padding: 0
+                cursor: pointer
+                outline: none
+                opacity: 0.5
+                +trans
+                span
+                    display: block
+                    background: #ff5454
+                    position: absolute
+                    color: $wt
+                    font-weight: 700
+                    opacity: 0
+                    top: 0 
+                    right: 0
+                    padding: 3px
+                    border-bottom-left-radius: 3px
+                    +boxRadiance(#ff5454)
+                    +trans
+                &:before
+                    color: $wt
+                    font-size: 22px
+                    +trans
+                &:hover
+                    opacity: 1
+                    &:before
+                        color: $primary
+                        +radiance
+                    span
+                        opacity: 1
+                &:active
+                    transform: scale(0.9)
+                
+
+                
+
+        // .addVideo
+        //     background: $gray2
+        //     border: none
+        //     text-align: center
+        //     align-self: stretch
+        //     padding: 5px
+        //     margin: 0
+        //     cursor: pointer
+        //     span
+        //         text-transform: uppercase
+        //         font-size: 8px
+        //         color: $lGray
+        //         display: block
+        //     &:before
+        //         color: $wt
+        //         font-size: 22px

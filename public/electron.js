@@ -7,6 +7,7 @@ const {
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
+const os = require('os');
 
 const {
     OPEN_PLAYER_WINDOW,
@@ -26,14 +27,19 @@ let mainWindow;
 let playerWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({
+    BrowserWindow.addDevToolsExtension(
+        path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/3.6.0_0')
+    ); 
+    BrowserWindow.addDevToolsExtension(
+        path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0')
+    ); 
+    mainWindow = new BrowserWindow({
         width: 900,
         height: 680,
         title: 'Administrator'
     });
-  mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
-  mainWindow.on('closed', () => mainWindow = null);
-    //   mainWindow.webContents.openDevTools(); 
+    mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
+    mainWindow.on('closed', () => mainWindow = null);
 }
 
 function createPlayerWindow () {

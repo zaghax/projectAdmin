@@ -1,8 +1,56 @@
-.AppContainer
+.appContainer
+    .header
+        background: black
+        text-align: center
+        padding: 10px
+        &__brandName
+            color: $wt05
+            font-size: 12px
+            font-weight: 100
+            letter-spacing: 10px
+
     .componentsWrap
+        padding: 10px
         display: flex
-        flex-grow: row wrap
-        .left
-            width: 70%
-        .right
-            width: 30%
+        flex-flow: row wrap
+        .columnLeft
+            width: 75%
+        .columnRight
+            width: 25%
+
+    .tabList
+        width: 100%
+        &__items
+            width: 100%
+            display: flex
+            justify-content: center
+            list-style: none
+            padding: 10px
+            margin-top: 10px
+            margin-bottom: 0
+            border-top-left-radius: 5px
+            border-top-right-radius: 5px
+            cursor: pointer
+            +gradient(bottom, $gray3, $bl)
+            +trans
+            
+        &__item
+            margin: 0 20px
+            span
+                color: $wt05
+                font-size: 12px 
+                letter-spacing: 2px
+                +trans
+            &.active,
+            &:hover
+                span
+                    color: $primary
+                    +textRadiance($primary)
+
+    .tabPaneContainer
+        padding: 10px
+        background: $bl05
+        height: calc( 100vh - 286px)
+        overflow-y: scroll
+
+    

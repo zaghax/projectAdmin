@@ -23,7 +23,7 @@ class SearchVideos extends Component {
 
         const params = [
             `&maxResults=${15}`,
-            `&q=${searchValue}`
+            `&q=${searchValue} musica`
             ];
 
         getVideos(params)
@@ -31,22 +31,24 @@ class SearchVideos extends Component {
         .then(response => {
             this.props.setSearchResults(response.items);
         })
+
+        this.props.setToggleTab('search');
     }
 
     render(){
         return(
             <div className="searchVideos">
                 <form
-                    className="searchForm"
+                    className="form"
                     onSubmit={this.getSearchResults}>
 
                     <input
-                        className="searchInput"
+                        className="form__input"
                         type="text"
-                        placeholder="Find your video"
+                        placeholder="Search"
                         onChange={this.setSearch}/>
 
-                    <button className="icon-search searchButton" type="submit" value="Buscar"/>
+                    <button className="icon-search form__button" type="submit" value="Buscar"/>
 
                 </form>
             </div>
@@ -56,7 +58,8 @@ class SearchVideos extends Component {
 
 const mapDispathToProps = dispatch => {
     return {
-        setSearchResults: (value) => dispatch({type: 'SET_SEARCH_RESULTS', value: value})
+        setSearchResults: (value) => dispatch({type: 'SET_SEARCH_RESULTS', value: value}),
+        setToggleTab: (value) => dispatch({type: 'SET_ACTIVE_TAB', value: value})
     }
 }
 

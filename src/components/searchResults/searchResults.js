@@ -15,21 +15,17 @@ class SearchResults extends Component {
         return videos.map((item, index) => {
 
             return (
-                <div className='videoItem' key={index} >
+                <div className='item' key={index} >
 
-                    <div className="videoWrapper">
-
-                        <div className="imageWrapper">
-                            <img className="videoImage" src={item.snippet.thumbnails.medium.url} alt=""/>
-                            <button className="icon-plus addVideo" onClick={() => { this.addPlaylistItem(item)}}/>
-                        </div>
-
-                        <div className="videoTitle" >
-                            <p dangerouslySetInnerHTML={{__html: item.snippet.title}} />
-                        </div>
-                    
+                    <div className="item__imageWrap">
+                        <img className="item__image" src={item.snippet.thumbnails.medium.url} alt=""/>
+                        <button className="icon-plus item__add" onClick={() => { this.addPlaylistItem(item)}}/>
                     </div>
 
+                    <div className="item__title" >
+                        <p dangerouslySetInnerHTML={{__html: item.snippet.title}} />
+                    </div>
+        
                 </div>
             )
         })

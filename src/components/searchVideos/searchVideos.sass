@@ -1,27 +1,31 @@
 .searchForm
     width: 100%
-    padding: 10px 0
+
+.form
     position: relative
-    .searchInput
+    &__input
         width: 100%
-        background: transparent
+        background: $bl05
         font-size: 14px
         border: 1px solid $primary
-        padding: 10px
+        padding: 7px
         padding-right: 40px
-        color: $lGray
+        color: rgba($wt, 0.8)
         outline: none
-    .searchButton
+        border-radius: 5px
+
+    &__button
         background: none
         border: none
         font-size: 22px
         color: $primary
         position: absolute
-        right: 10px
+        right: 0
         top: 0
         z-index: 1
         height: 100%
         cursor: pointer
+        +textRadiance($secondary)
 
     
 

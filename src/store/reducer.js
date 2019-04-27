@@ -3,7 +3,8 @@ const initialState = {
     fullPlayList: 'play',
     playListKeys: [],
     currentVideoData: {},
-    currentObjectKey: ''
+    currentObjectKey: '',
+    activeTab: 'suggestions'
 }
 
 const reducer = (state = initialState, action) => {
@@ -43,9 +44,20 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 currentObjectKey: action.value
             }
+        
+        case 'SET_ACTIVE_TAB' :
+            return {
+                ...state,
+                activeTab: action.value
+            }
+
+        default:
+            return {
+                ...state
+            }
     }
 
-    return state;
+    // return state;
 }
 
 export default reducer;

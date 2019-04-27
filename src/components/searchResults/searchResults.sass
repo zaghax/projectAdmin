@@ -1,36 +1,32 @@
-@keyframes fade
-    from
-        opacity: 0
-    to
-        opacity: 1
-
 .searchResults
     width: 100%
     display: flex
     flex-flow: row wrap
+    justify-content: space-around
 
-.videoItem
-    width: 20%
-    padding: 15px
-    opacity: 0
-    @for $i from 1 through 15
-        &:nth-child(#{$i})
-            animation: fade 1s $i * 100ms ease-in-out
-            animation-fill-mode: forwards
-
-.videoWrapper
-    width: 100%
-    box-shadow: 0px 0px 15px 3px #00f3ff1f
-
-    .imageWrapper
-        position: relative
+    .item
+        width: 17%
+        opacity: 0
+        border-radius: 5px
+        margin: 10px 0
         overflow: hidden
-        border-top-left-radius: 5px
-        border-top-right-radius: 5px
-        .videoImage
+        +boxRadiance(#00f3ff1f)
+        @for $i from 1 through 15
+            &:nth-child(#{$i})
+                animation: fade 1s $i * 100ms ease-in-out
+                animation-fill-mode: forwards
+
+        &__imageWrap
+            position: relative
+            overflow: hidden
+            
+        &__image
             width: 100%
-            transition: all 250ms ease-in-out
-        .addVideo
+            opacity: 0.5
+            display: block
+            +trans
+
+        &__add
             background: none
             border: none
             position: absolute
@@ -42,31 +38,33 @@
             padding: 0
             margin: 0
             cursor: pointer
-            transition: all 250ms ease-in-out
+            +trans
             &:before
                 font-size: 30px
                 color: $wt
                 opacity: 0.5
-                transition: all 250ms ease-in-out
+                +trans
+
         &:hover
-            .videoImage
+            .item__image
                 transform: scale(1.1)
-            .addVideo
-                background: rgba(0,0,0,0.5)
+                opacity: 1
+            .item__add
                 &:before
                     color: $primary
                     opacity: 1
-                    text-shadow: 0px 0px 10px $primary
                     transform: scale(1.1)
-    .videoTitle
-        background: #3c3c3c30
-        padding: 5px
-        min-height: 60px
-        overflow: hidden
-        display: flex
-        align-items: center
-        p
-            color: $wt
-            margin: 0
-            padding: 0
-            font-size: 12px
+                    +textRadiance($primary)
+
+        &__title
+            background: $bl05
+            padding: 5px
+            min-height: 60px
+            overflow: hidden
+            display: flex
+            align-items: center
+            p
+                color: rgba($wt, 0.8)
+                margin: 0
+                padding: 0
+                font-size: 11px

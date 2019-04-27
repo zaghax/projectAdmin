@@ -34,12 +34,13 @@ function createWindow() {
         path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0')
     ); 
     mainWindow = new BrowserWindow({
-        width: 900,
+        width: 960,
         height: 680,
         title: 'Administrator'
     });
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
     mainWindow.on('closed', () => mainWindow = null);
+    //   mainWindow.webContents.openDevTools(); 
 }
 
 function createPlayerWindow () {

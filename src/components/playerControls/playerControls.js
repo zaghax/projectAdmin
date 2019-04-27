@@ -230,46 +230,35 @@ class Controls extends Component {
             }) 
         }
     }
-
-    infoOffScreenPlayer = () => {
+    
+    getControls = () => {
 
         const { currentVideoData } = this.props;
 
         return (
-            <div className="currentlyPlaying">
-                <img
-                    className="videoThumnail"
-                    src={currentVideoData.snippet.thumbnails.high.url} alt=""/>
-
-                <div className="playingInfo">
-                    <div className="infoTitle">Currently playing</div>
+            <div className="playerControls">
+                <div className="info">
+                    <div className="info__title">Currently playing</div>
                     <div
-                        className="videoName"
+                        className="info__name"
                         dangerouslySetInnerHTML={{ __html: currentVideoData.snippet.title }} />
                 </div>
-            </div>
-        )
-
-    }
-    
-    getControls = () => {
-
-        return (
-            <div className="playerControls">
-                <div className="videoTime">
-                    <span className="videoRemainingTime">{this.state.videoRemaining}</span>
-                    <span className="videoLenghtTime">{this.state.videoLenght}</span>
-                </div>
-                <div className="progressBar">
-                    <div className="bar" style={{width:this.state.progressBarFill + '%'}}/>
-                    <input className="progressBarInput" type="range" min="0" max={this.state.videoDuration} onChange={this.seekTo}/>
-                </div>
-                <div className="controlsButtonGroup">
-                    <SearchVideos/>
-                    <button className="ctrl-btn icon-skip-back" onClick={this.previousVideo}/>
-                    <button className={`ctrl-btn player-toggle ${this.state.playPauseStatus ? 'icon-pause' : 'icon-play'}`} onClick={this.switchPlayPause}/>
-                    <button className="ctrl-btn icon-skip-forward" onClick={this.nextVideo}/>
-                    <button className={`ctrl-btn screen-toggle ${this.state.floatingScreen ? 'icon-minimize' : 'icon-maximize'}`} onClick={this.toggleScreen}/>
+                <SearchVideos/>
+                <div className="controls">
+                    <div className="time">
+                        <span className="time__remaining">{this.state.videoRemaining}</span>
+                        <span className="time__lenght">{this.state.videoLenght}</span>
+                    </div>
+                    <div className="progress">
+                        <div className="progress__bar" style={{width:this.state.progressBarFill + '%'}}/>
+                        <input className="progress__input" type="range" min="0" max={this.state.videoDuration} onChange={this.seekTo}/>
+                    </div>
+                    <div className="buttons">
+                        <button className="buttons__btn icon-skip-back" onClick={this.previousVideo}/>
+                        <button className={`buttons__btn player-toggle ${this.state.playPauseStatus ? 'icon-pause' : 'icon-play'}`} onClick={this.switchPlayPause}/>
+                        <button className="buttons__btn icon-skip-forward" onClick={this.nextVideo}/>
+                        <button className={`buttons__btn screen-toggle ${this.state.floatingScreen ? 'icon-minimize' : 'icon-maximize'}`} onClick={this.toggleScreen}/>
+                    </div>
                 </div>
             </div>
         )
@@ -278,23 +267,20 @@ class Controls extends Component {
 
     render(){
         const {floatingScreen} = this.state;
+        const { currentVideoData } = this.props;
         return(
             <div className="playerWindow">
 
-                {!floatingScreen &&
-                    <div className="playerWrapper">
+                <div className="playerWrapper" style={{backgroundImage:`url('${currentVideoData.snippet.thumbnails.high.url}')`}}>
+                    {!floatingScreen &&
                         <Player
                             onRef={ref => (this.child = ref)} 
                             triggerNextVideo={this.triggerNextVideo} 
                             progressBarStatus={this.updateProgressBar}
-                        />             
-                    </div>
-                }
-                {floatingScreen && 
-                    <div className="playerWrapper">
-                        {this.infoOffScreenPlayer()}
-                    </div>
-                }
+                        />       
+                    }      
+                </div>
+                
                 {this.getControls()}
             </div>
         )

@@ -1,34 +1,37 @@
 .playList
-    padding: 10px
-    background: rgba($wt, 0.2)
+    padding-left: 10px
     .head
-        background: #000000
         padding: 5px
         text-align: center
+        border-top-left-radius: 5px
+        border-top-right-radius: 5px
+        +gradient( bottom, $gray3 ,$bl)
         span
-            color: rgba($wt, 0.5)
+            color: $primary
             text-transform: uppercase
-            font-size: 14px
+            font-size: 12px
             letter-spacing: 4px
             font-weight: 100
+            +textRadiance($primary)
+
     .item__list
         width: 100%
-        height: calc(100vh - 48px)
+        height: calc(100vh - 86px)
+        background: $bl05
         overflow-y: scroll
         .item
             width: 100%
-            background: rgba($bl, 0.4)
             position: relative
             display: flex
             flex-flow: row wrap
             align-items: center
             padding: 10px 0
-            border-bottom: 1px solid rgba($wt, 0.5)
-            opacity: 0
-            @for $i from 1 through 50
-                &:nth-child(#{$i})
-                    animation: fade 1s $i * 100ms ease-in-out
-                    animation-fill-mode: forwards
+            border-bottom: 1px solid $wt05
+            // opacity: 0
+            // @for $i from 1 through 50
+            //     &:nth-child(#{$i})
+            //         animation: fade 1s $i * 100ms ease-in-out
+            //         animation-fill-mode: forwards
                     
             &__image
                 width: 40%
@@ -72,6 +75,7 @@
                     right: 0
                     padding: 3px
                     border-bottom-left-radius: 3px
+                    font-size: 9px
                     +boxRadiance(#ff5454)
                     +trans
                 &:before
@@ -82,28 +86,9 @@
                     opacity: 1
                     &:before
                         color: $primary
-                        +radiance
+                        +textRadiance($primary)
                     span
                         opacity: 1
                 &:active
-                    transform: scale(0.9)
-                
-
-                
-
-        // .addVideo
-        //     background: $gray2
-        //     border: none
-        //     text-align: center
-        //     align-self: stretch
-        //     padding: 5px
-        //     margin: 0
-        //     cursor: pointer
-        //     span
-        //         text-transform: uppercase
-        //         font-size: 8px
-        //         color: $lGray
-        //         display: block
-        //     &:before
-        //         color: $wt
-        //         font-size: 22px
+                    &:before
+                        transform: scale(0.1)

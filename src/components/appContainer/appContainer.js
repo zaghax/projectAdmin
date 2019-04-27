@@ -61,17 +61,50 @@ class AppContainer extends Component {
         
     }
 
+    getTabMenu = () => {
+        return (
+            <div className="tabList">
+                <ul className="tabList__items">
+                    <li className={`tabList__item ${this.props.activeTab === 'suggestions' ? 'active' : ''}`} onClick={() => {this.props.setToggleTab('suggestions')}}>
+                        <span>SUGGESTED VIDEOS</span>
+                    </li>
+                    <li className={`tabList__item ${this.props.activeTab === 'search' ? 'active' : ''}`} onClick={() => {this.props.setToggleTab('search')}}>
+                        <span>SEARCH RESULTS</span>
+                    </li>
+                </ul>
+            </div>
+        ) 
+    }
+
     render(){  
         return(
-            <div className="AppContainer">
+            <div className="appContainer">
+                <header className="header">
+                    <span className="header__brandName">AWESOME PLAYER</span>
+                </header>
+
                 {this.state.showComponents && (
                     <div className="componentsWrap">
-                        <div className="left">
+                        <div className="columnLeft">
                             <PlayerControls/>
-                            {/* <SearchResults/> */}
-                            <SuggestedVideos/>
+
+                            {this.getTabMenu()}
+
+                            <div className="tabPaneContainer">
+                            
+                                {this.props.activeTab === 'search' && (
+                                    <SearchResults/> 
+                                )}
+
+                                {this.props.activeTab === 'suggestions' && (
+                                    <SuggestedVideos/>
+                                    // <h1>Desactivado</h1>
+                                )}
+
+                            </div>
+
                         </div>
-                        <div className="right">
+                        <div className="columnRight">
                             <PlayList/>
                         </div>
                     </div>
@@ -87,7 +120,8 @@ const mapStateToProps = state => {
         fullPlayList: state.fullPlayList,
         playListKeys: state.playListKeys,
         currentVideoData: state.currentVideoData,
-        currentObjectKey: state.currentObjectKey
+        currentObjectKey: state.currentObjectKey,
+        activeTab: state.activeTab
     }
 }
 
@@ -96,7 +130,8 @@ const mapDispathToProps = dispatch => {
         setFullPlayList: (value) => dispatch({type: 'SET_FULL_PLAYLIST', value: value}),
         setPlayListKeys: (value) => dispatch({type: 'SET_PLAYLIST_KEYS', value: value}),
         setCurrentVideoData: (value) => dispatch({type: 'SET_CURRENT_VIDEO_DATA', value: value}),
-        setCurrentObjectKey: (value) => dispatch({type: 'SET_CURRENT_OBJECT_KEY', value: value})
+        setCurrentObjectKey: (value) => dispatch({type: 'SET_CURRENT_OBJECT_KEY', value: value}),
+        setToggleTab: (value) => dispatch({type: 'SET_ACTIVE_TAB', value: value})
     }
 }
 

@@ -16,7 +16,8 @@ const {
     TRIGGER_NEXT_VIDEO,
     SET_PROGRESS_BAR_STATUS,
     SEEK_TO,
-    PLAYER_READY
+    PLAYER_READY,
+    LOAD_VIDEO_FROM_PLAYLIST
 } = require('../../utils/constants');
 
 class Controls extends Component {
@@ -70,6 +71,18 @@ class Controls extends Component {
                 floatingScreen: false
             })
         });
+
+        ipcRenderer.on(PLAYER_WINDOW_CLOSED, () => {
+            this.updateProgressBar('stoped'); 
+            this.setState({
+                floatingScreen: false
+            })
+        });
+
+        ipcRenderer.on(LOAD_VIDEO_FROM_PLAYLIST, (event, listId) => {
+            console.log('contols dice', listId)
+            this.loadVideo(listId);
+        });
     }
 
     switchPlayPause = () => {
@@ -105,11 +118,20 @@ class Controls extends Component {
         })
     }
 
-    loadVideo = () => {
+    loadVideo = (idFromPlaylist) => {
 
         const {playingIndex, floatingScreen} = this.state;
         const {playListKeys, fullPlayList} = this.props;
-        const key = playListKeys[playingIndex];
+        let key = '';
+
+        if(idFromPlaylist){
+            key = idFromPlaylist;
+            this.setState({
+                playingIndex: playListKeys.indexOf(idFromPlaylist)
+            })
+        }else{
+            key = playListKeys[playingIndex];
+        }
 
         floatingScreen ?  ipcRenderer.send(LOAD_VIDEO, fullPlayList[key].id.videoId ) : this.child.loadVideo(fullPlayList[key].id.videoId);
 
@@ -119,6 +141,8 @@ class Controls extends Component {
         this.setState({
             playPauseStatus: true
         })
+
+        this.updateProgressBar('stoped'); 
 
     }
 
@@ -148,8 +172,6 @@ class Controls extends Component {
             }, () => {
                 this.loadVideo();
             })
-
-            this.updateProgressBar('stoped'); 
             
         }
 
@@ -164,9 +186,7 @@ class Controls extends Component {
             this.setState({
                 playingIndex: playingIndex - 1
             }, () => this.loadVideo())
-
-            this.updateProgressBar('stoped'); 
-            
+    
         }
 
     }

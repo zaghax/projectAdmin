@@ -13,15 +13,38 @@ class SuggestedVideos extends Component {
         printCoverFlow: false
     }
 
-    addPlaylistItem = (item) => {
+    constructor(props){
+        super(props);
+        this.btnRefs = [];
+    }
 
-        dbRefPlaylist.push(item);
+    addRemovePlaylistItem = (item, index) => {
         
+        if(this.btnRefs[index].classList.contains('icon-x')){
+
+            const fbId = this.btnRefs[index].getAttribute("id");
+            dbRefPlaylist.child(fbId).remove();
+            this.btnRefs[index].classList.add("icon-plus");
+            this.btnRefs[index].classList.remove("icon-x");
+
+        }else{
+            dbRefPlaylist.push(item).then((snap)=> {
+
+                this.btnRefs[index].classList.remove("icon-plus");
+                this.btnRefs[index].classList.add("icon-x");
+                this.btnRefs[index].setAttribute("id", snap.key);
+
+            });
+        }
     }
 
     componentDidMount(){
 
         this.getSuggestedVideos(this.props.currentVideoData.id.videoId);
+
+        this.setState({
+            currentObjectKey: this.props.currentObjectKey
+        })
 
         store.subscribe(()=>{
 
@@ -86,7 +109,7 @@ class SuggestedVideos extends Component {
                 <div className="item" key={index}>
                     <div className="item__card">
                         <img className="item__image" src={item.snippet.thumbnails.high.url} alt={item.snippet.title}/>
-                        <button className="icon-plus item__add" onClick={() => { this.addPlaylistItem(item)}}/>
+                        <button className="icon-plus item__add" onClick={() => { this.addRemovePlaylistItem(item, index)}} ref={((addBtn) => {this.btnRefs[index] = addBtn})}/>
                         <div className="item__title" >
                             <p dangerouslySetInnerHTML={{__html: item.snippet.title}} />
                         </div>

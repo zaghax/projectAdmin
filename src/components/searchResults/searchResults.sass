@@ -44,12 +44,19 @@
                 color: $wt
                 opacity: 0.5
                 +trans
+                
+        .icon-x
+            &:before
+                color: $danger
+                opacity: 1
+                transform: scale(1.1)
+                +textRadiance($danger)
 
         &:hover
             .item__image
                 transform: scale(1.1)
                 opacity: 1
-            .item__add
+            .icon-plus
                 &:before
                     color: $primary
                     opacity: 1

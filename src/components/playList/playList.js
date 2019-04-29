@@ -1,11 +1,37 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {dbRefPlaylist} from '../appContainer/appContainer';
+const { remote, ipcRenderer } = window.require('electron');
+
+const {
+    LOAD_VIDEO_FROM_PLAYLIST
+} = require('../../utils/constants');
  
 class PlayList extends Component {
 
     removeFromPlaylist = (fbId) => {
         dbRefPlaylist.child(fbId).remove();
+    }
+
+    scrollTop = () => {
+        document.querySelector('.item__list').scrollTop = 0;
+    }
+
+    scrollBottom = () => {
+        let scrollHeight = document.querySelector('.item__list').scrollHeight
+        document.querySelector('.item__list').scrollTop = scrollHeight;
+    }
+
+    scrollListener = () => {
+        if(document.querySelector('.item__list').scrollTop > 200){
+            document.querySelector('.icon-chevrons-up').classList.add('active');
+        }else{
+            document.querySelector('.icon-chevrons-up').classList.remove('active');
+        }
+    }
+
+    loadVideoFromPlaylist = (listId) => {
+        ipcRenderer.send(LOAD_VIDEO_FROM_PLAYLIST, listId)
     }
 
     getPlayList = () => {
@@ -25,6 +51,7 @@ class PlayList extends Component {
                 <div className="item" key={index}>
                     <div className="item__image">
                         <img src={item.snippet.thumbnails.medium.url} alt=""/>
+                        <button className="icon-play" onClick={() => {this.loadVideoFromPlaylist(item.fbId)}}/>
                     </div>
                     <div className="item__title" >
                         <p dangerouslySetInnerHTML={{__html: item.snippet.title}} />
@@ -44,8 +71,12 @@ class PlayList extends Component {
             <div className="playList">
                 <div className="head">
                     <span>PlayList</span>
+                    <div className="scrollControls">
+                        <button className="icon-chevrons-up scroll__btn" onClick={this.scrollTop}/>
+                        <button className="icon-chevrons-down scroll__btn" onClick={this.scrollBottom}/>
+                    </div>
                 </div>
-                <div className="item__list">
+                <div className="item__list" onScroll={this.scrollListener}>
                     {this.getPlayList()}
                 </div>
             </div>

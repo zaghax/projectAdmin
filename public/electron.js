@@ -23,7 +23,8 @@ const {
     PLAYER_READY,
     CLOSE_MAIN_WINDOW,
     MINIMIZE_MAIN_WINDOW,
-    TOGGLE_SIZE_MAIN_WINDOW
+    TOGGLE_SIZE_MAIN_WINDOW,
+    LOAD_VIDEO_FROM_PLAYLIST
 } = require('../src/utils/constants');
 
 let mainWindow;
@@ -43,7 +44,7 @@ function createWindow() {
         minWidth: 960,
         minHeight: 680,
         titleBarStyle: 'hiddenInset',
-        frame: false
+        // frame: false
     });
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
     mainWindow.on('closed', () => mainWindow = null);
@@ -57,7 +58,7 @@ function createPlayerWindow () {
         height: 390, 
         focusable: true,
         // alwaysOnTop: true,
-        titleBarStyle: 'hiddenInset'
+        // titleBarStyle: 'hiddenInset'
     });
     playerWindow.loadURL(isDev ? 'http://localhost:3000/player' : `file://${path.join(__dirname, '../build/index.html/player')}`);
     playerWindow.on('closed', () => {
@@ -118,6 +119,10 @@ ipcMain.on(MINIMIZE_MAIN_WINDOW, () => {
 ipcMain.on(TOGGLE_SIZE_MAIN_WINDOW, () => {
     toggleSizeMainWindow ? mainWindow.maximize() : mainWindow.unmaximize();
     toggleSizeMainWindow = !toggleSizeMainWindow;
+});
+
+ipcMain.on(LOAD_VIDEO_FROM_PLAYLIST, (event, listId) => {
+    mainWindow.send(LOAD_VIDEO_FROM_PLAYLIST, listId);
 });
 
 app.on('ready', createWindow);

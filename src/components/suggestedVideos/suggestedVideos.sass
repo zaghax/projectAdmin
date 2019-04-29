@@ -28,8 +28,6 @@
             &:before
                 left: 0 !important
 
-
-
     .item__list
         .item
             width: 300px
@@ -78,16 +76,22 @@
                     font-size: 40px
                     +trans
 
-                &:hover
+        .icon-plus
+            &:hover
+                opacity: 1
+                &:before
+                    color: $primary
+                    +textRadiance($primary)
+                span
                     opacity: 1
-                    &:before
-                        color: $primary
-                        +textRadiance($primary)
-                    span
-                        opacity: 1
+        .icon-x
+            opacity: 1
+            &:before
+                color: $danger
+                +textRadiance($danger)
 
-                &:active
-                    transform: scale(0.9)
+                // &:active
+                //     transform: scale(0.9)
             
 
                     

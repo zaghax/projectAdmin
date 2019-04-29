@@ -5,6 +5,7 @@
         text-align: center
         border-top-left-radius: 5px
         border-top-right-radius: 5px
+        position: relative
         +gradient( bottom, $gray3 ,$bl)
         span
             color: $primary
@@ -13,12 +14,34 @@
             letter-spacing: 4px
             font-weight: 100
             +textRadiance($primary)
-
+        .scrollControls
+            position: absolute
+            top: 50%
+            right: 5px
+            transform: translateY(-50%)
+            .scroll__btn
+                background: none
+                border: none
+                outline: none
+                padding: 5px
+                cursor: pointer
+                &:before
+                    font-size: 14px
+                    color: $primary
+                    opacity: 0.5
+                    +trans
+                &:hover,
+                &.active
+                    &:before
+                        opacity: 1
+                        +textRadiance($primary)
+                    
     .item__list
         width: 100%
         height: calc(100vh - 86px)
         background: $bl05
         overflow-y: scroll
+        scroll-behavior: smooth
         .item
             width: 100%
             position: relative
@@ -35,9 +58,33 @@
                     
             &__image
                 width: 40%
+                position: relative
                 img
                     width: 100%
                     display: block
+                .icon-play
+                    border: 2px solid $primary
+                    width: 35px
+                    height: 35px
+                    border-radius: 50%
+                    background: rgba($secondary, 0.5)
+                    position: absolute 
+                    top: 50%
+                    left: 50%
+                    transform: translate(-50% , -50%)
+                    cursor: pointer
+                    opacity: 0.5
+                    outline: none
+                    +trans
+                    &:before
+                        font-size: 20px
+                        color: $primary
+                        
+                    &:hover
+                        opacity: 1
+                        +boxRadiance($primary)
+
+
 
             &__title
                 width: 50%

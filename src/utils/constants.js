@@ -10,4 +10,7 @@ module.exports = {
     SET_PROGRESS_BAR_STATUS: 'set-progress-bar-status',
     SEEK_TO: 'seek-to',
     PLAYER_READY: 'player-ready',
+    CLOSE_MAIN_WINDOW: 'close-main-window',
+    MINIMIZE_MAIN_WINDOW: 'minimize-main-window',
+    TOGGLE_SIZE_MAIN_WINDOW: 'toggle-size-main-window'
 };

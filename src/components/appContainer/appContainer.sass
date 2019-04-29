@@ -3,11 +3,35 @@
         background: black
         text-align: center
         padding: 10px
+        -webkit-app-region: drag
+        position: relative
+
         &__brandName
             color: $wt05
             font-size: 12px
             font-weight: 100
             letter-spacing: 10px
+
+        .windowControls
+            position: absolute
+            right: 10px
+            top: 50%
+            transform: translateY(-50%)
+            &__control
+                border-radius: 0
+                border: none
+                background: none
+                cursor: pointer
+                outline: none
+                &:before
+                    color: $primary
+                    font-size: 20px
+                    +textRadiance($primary)
+                    +trans
+                &:hover
+                    &:before
+                        transform: scale(1.1)
+
 
     .componentsWrap
         padding: 10px

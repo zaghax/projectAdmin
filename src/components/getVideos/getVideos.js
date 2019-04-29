@@ -6,8 +6,8 @@ export const getVideos = async (params)  => {
         '&type=video',
         '&videoDuration=medium',
         // `&key=${API_KEY}`,
-        // '&key=AIzaSyC68vEAmg9rnK58aoTP2yePI7FcWgJinFw'
-        '&key=AIzaSyAUWZUfmzfGrPsvtxZ_RdnTWX3alQUaEJo'
+        '&key=AIzaSyC68vEAmg9rnK58aoTP2yePI7FcWgJinFw'
+        // '&key=AIzaSyAUWZUfmzfGrPsvtxZ_RdnTWX3alQUaEJo'
         
     ]
 

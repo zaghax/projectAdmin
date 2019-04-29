@@ -20,11 +20,15 @@ const {
     TRIGGER_NEXT_VIDEO,
     SET_PROGRESS_BAR_STATUS,
     SEEK_TO,
-    PLAYER_READY
+    PLAYER_READY,
+    CLOSE_MAIN_WINDOW,
+    MINIMIZE_MAIN_WINDOW,
+    TOGGLE_SIZE_MAIN_WINDOW
 } = require('../src/utils/constants');
 
 let mainWindow;
 let playerWindow;
+let toggleSizeMainWindow = true;
 
 function createWindow() {
     BrowserWindow.addDevToolsExtension(
@@ -36,10 +40,14 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 960,
         height: 680,
-        title: 'Administrator'
+        minWidth: 960,
+        minHeight: 680,
+        titleBarStyle: 'hiddenInset',
+        frame: false
     });
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
     mainWindow.on('closed', () => mainWindow = null);
+    mainWindow.setMenu(null);
     //   mainWindow.webContents.openDevTools(); 
 }
 
@@ -48,14 +56,15 @@ function createPlayerWindow () {
         width: 640, 
         height: 390, 
         focusable: true,
-        alwaysOnTop: true,
-        title: 'Player'
+        // alwaysOnTop: true,
+        titleBarStyle: 'hiddenInset'
     });
     playerWindow.loadURL(isDev ? 'http://localhost:3000/player' : `file://${path.join(__dirname, '../build/index.html/player')}`);
     playerWindow.on('closed', () => {
         playerWindow = null;
         mainWindow.send(PLAYER_WINDOW_CLOSED);
     });
+    playerWindow.setMenu(null);
 }
 
 ipcMain.on(OPEN_PLAYER_WINDOW, () => {
@@ -96,6 +105,19 @@ ipcMain.on(SEEK_TO, (event, seekTime) => {
 
 ipcMain.on(PLAYER_READY, () => {
     mainWindow.send(PLAYER_READY);
+});
+
+ipcMain.on(CLOSE_MAIN_WINDOW, () => {
+    mainWindow.close();
+});
+
+ipcMain.on(MINIMIZE_MAIN_WINDOW, () => {
+    mainWindow.minimize();
+});
+
+ipcMain.on(TOGGLE_SIZE_MAIN_WINDOW, () => {
+    toggleSizeMainWindow ? mainWindow.maximize() : mainWindow.unmaximize();
+    toggleSizeMainWindow = !toggleSizeMainWindow;
 });
 
 app.on('ready', createWindow);

@@ -5,6 +5,14 @@ import SearchResults from '../searchResults/searchResults';
 import PlayList from '../playList/playList';
 import * as firebase from 'firebase';
 import {connect} from 'react-redux';
+const { ipcRenderer } = window.require('electron');
+
+const {
+    CLOSE_MAIN_WINDOW,
+    MINIMIZE_MAIN_WINDOW,
+    TOGGLE_SIZE_MAIN_WINDOW
+} = require('../../utils/constants');
+
 
 const config = {
     apiKey: "AIzaSyCkwdRv1u2LSarAY152iZgWL3H5RroueqM",
@@ -25,10 +33,16 @@ class AppContainer extends Component {
 
     state = {
         isLoadFirstVideo: true,
-        showComponents: false
+        showComponents: false,
+        isWindows: false,
+        isMaximized: false
     }
 
     componentDidMount(){
+
+        window.navigator.platform.indexOf('Win') !== -1 && this.setState({
+            isWindows: true
+        });
 
         dbRefPlaylist.on('value', snap => {
 
@@ -61,6 +75,21 @@ class AppContainer extends Component {
         
     }
 
+    closeMainWindow = () => {
+        ipcRenderer.send(CLOSE_MAIN_WINDOW);
+    }
+
+    minimizeMainWindow = () => {
+        ipcRenderer.send(MINIMIZE_MAIN_WINDOW);
+    }
+
+    toggleSizeMainWindow = () => {
+        this.setState({
+            isMaximized: !this.state.isMaximized
+        })
+        ipcRenderer.send(TOGGLE_SIZE_MAIN_WINDOW);
+    }
+
     getTabMenu = () => {
         return (
             <div className="tabList">
@@ -81,6 +110,13 @@ class AppContainer extends Component {
             <div className="appContainer">
                 <header className="header">
                     <span className="header__brandName">AWESOME PLAYER</span>
+                    {this.state.isWindows && 
+                        <div className="windowControls">
+                            <button className="icon-minus windowControls__control" onClick={this.minimizeMainWindow}/>
+                            <button className={`${this.state.isMaximized ? 'icon-minimize' : 'icon-maximize'} windowControls__control`} onClick={this.toggleSizeMainWindow}/>
+                            <button className="icon-x windowControls__control" onClick={this.closeMainWindow}/>
+                        </div>
+                    }
                 </header>
 
                 {this.state.showComponents && (

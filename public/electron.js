@@ -24,7 +24,8 @@ const {
     CLOSE_MAIN_WINDOW,
     MINIMIZE_MAIN_WINDOW,
     TOGGLE_SIZE_MAIN_WINDOW,
-    LOAD_VIDEO_FROM_PLAYLIST
+    LOAD_VIDEO_FROM_PLAYLIST,
+    TOGGLE_MUTE
 } = require('../src/utils/constants');
 
 let mainWindow;
@@ -123,6 +124,10 @@ ipcMain.on(TOGGLE_SIZE_MAIN_WINDOW, () => {
 
 ipcMain.on(LOAD_VIDEO_FROM_PLAYLIST, (event, listId) => {
     mainWindow.send(LOAD_VIDEO_FROM_PLAYLIST, listId);
+});
+
+ipcMain.on(TOGGLE_MUTE, () => {
+    playerWindow.send(TOGGLE_MUTE);
 });
 
 app.on('ready', createWindow);

@@ -29,20 +29,6 @@ const refDB = firebase.database().ref();
 export const dbRefPlaylist = refDB.child('playlist');
 export const dbRefCurrentPlaying = refDB.child('currentPlaying');
 
-
-
-// HTMLMediaElement.setSinkId(sinkId).then(function() { 
-//     // const devices = await navigator.mediaDevices.enumerateDevices();
-//     // const audioDevices = devices.filter(device => device.kind === 'audiooutput');
-//     // const audio = document.createElement('audio');
-//     // await audio.setSinkId(audioDevices[0].deviceId);
-//     // console.log('Audio is being played on ' + audio.sinkId);
-//     console.log(sinkId)
-//  })
-
-
-
-
 class AppContainer extends Component {
 
     state = {
@@ -53,9 +39,7 @@ class AppContainer extends Component {
     }
 
     componentDidMount(){
-        
-        this.audio();
-
+    
         window.navigator.platform.indexOf('Mac') !== -1 && this.setState({
             isWindows: true
         });
@@ -89,21 +73,6 @@ class AppContainer extends Component {
 
         });
         
-    }
-
-    // async function add1(x) {
-    //     const a = await resolveAfter2Seconds(20);
-    //     const b = await resolveAfter2Seconds(30);
-    //     return x + a + b;
-    // }
-
-    audio = async() => {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const audioDevices = devices.filter(device => device.kind === 'audiooutput');
-        const audio = document.createElement('audio');
-        await audio.setSinkId(audioDevices[0].deviceId);
-        console.log('Audio is being played on ' + audio.sinkId);
-        console.log(audioDevices)
     }
 
     closeMainWindow = () => {

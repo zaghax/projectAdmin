@@ -10,7 +10,8 @@ const {
     TRIGGER_NEXT_VIDEO,
     SET_PROGRESS_BAR_STATUS,
     SEEK_TO,
-    PLAYER_READY
+    PLAYER_READY,
+    TOGGLE_MUTE
 } = require('../../utils/constants');
 
 class Player extends Component {
@@ -45,12 +46,21 @@ class Player extends Component {
                 this.seekTo(seekTime);
             });
 
+            ipcRenderer.on(TOGGLE_MUTE, () => {
+                this.toggleMute();
+            });
+
         }
     }
 
     componentWillUnmount() {
         this.props.onRef !== undefined && this.props.onRef(null);
     }
+
+    toggleMute = () => {
+        const {YTTarget} = this.state;
+        YTTarget.isMuted() ? YTTarget.unMute() : YTTarget.mute();
+    } 
 
     playVideo = () => {
         const {YTTarget} = this.state;

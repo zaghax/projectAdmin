@@ -13,5 +13,6 @@ module.exports = {
     CLOSE_MAIN_WINDOW: 'close-main-window',
     MINIMIZE_MAIN_WINDOW: 'minimize-main-window',
     TOGGLE_SIZE_MAIN_WINDOW: 'toggle-size-main-window',
-    LOAD_VIDEO_FROM_PLAYLIST: 'load-video-from-playlist'
+    LOAD_VIDEO_FROM_PLAYLIST: 'load-video-from-playlist',
+    TOGGLE_MUTE: 'toggle-mute'
 };

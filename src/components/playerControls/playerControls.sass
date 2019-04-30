@@ -81,11 +81,13 @@
         &:hover
             border-radius: 5px
         &:active
-            transform: scale(0.9)  
+            transform: scale(0.9)
 
+
+
+    .volume-toggle,
     .screen-toggle
-        position: absolute
-        right: 20px
+        position: absolute 
         top: 50%
         transform: translateY(-50%)
         &:before
@@ -96,7 +98,20 @@
         &:active
             &:before
                 opacity: 1 
-                transform: translateY(-1px) scale(0.9)   
+                transform: translateY(-1px) scale(0.9)
+        
+
+
+    .volume-toggle
+        left: 20px
+        &.icon-volume-x
+            &:before
+                opacity: 1   
+    .screen-toggle
+        right: 20px
+        &.icon-minimize
+            &:before
+                opacity: 1     
 
     .icon-play
         &:before

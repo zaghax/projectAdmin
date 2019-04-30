@@ -17,7 +17,8 @@ const {
     SET_PROGRESS_BAR_STATUS,
     SEEK_TO,
     PLAYER_READY,
-    LOAD_VIDEO_FROM_PLAYLIST
+    LOAD_VIDEO_FROM_PLAYLIST,
+    TOGGLE_MUTE
 } = require('../../utils/constants');
 
 class Controls extends Component {
@@ -36,7 +37,8 @@ class Controls extends Component {
         videoRemaining: '0:00',
         //Player
         playPauseStatus: false,
-        loadOnce: true
+        loadOnce: true,
+        isMuted: false
     }
 
     constructor(props) {
@@ -115,6 +117,13 @@ class Controls extends Component {
             }else{
                 ipcRenderer.send(CLOSE_PLAYER_WINDOW);
             }
+        })
+    }
+
+    toggleMute = () => {
+        this.state.floatingScreen ?  ipcRenderer.send(TOGGLE_MUTE) : this.child.toggleMute();
+        this.setState({
+            isMuted: !this.state.isMuted
         })
     }
 
@@ -274,6 +283,7 @@ class Controls extends Component {
                         <input className="progress__input" type="range" min="0" max={this.state.videoDuration} onChange={this.seekTo}/>
                     </div>
                     <div className="buttons">
+                        <button className={`buttons__btn volume-toggle ${this.state.isMuted ? 'icon-volume-x' : 'icon-volume-2'}`} onClick={this.toggleMute}/>
                         <button className="buttons__btn icon-skip-back" onClick={this.previousVideo}/>
                         <button className={`buttons__btn player-toggle ${this.state.playPauseStatus ? 'icon-pause' : 'icon-play'}`} onClick={this.switchPlayPause}/>
                         <button className="buttons__btn icon-skip-forward" onClick={this.nextVideo}/>

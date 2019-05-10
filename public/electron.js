@@ -45,7 +45,7 @@ function createWindow() {
         minWidth: 960,
         minHeight: 680,
         titleBarStyle: 'hiddenInset',
-        // frame: false
+        frame: false
     });
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
     mainWindow.on('closed', () => mainWindow = null);

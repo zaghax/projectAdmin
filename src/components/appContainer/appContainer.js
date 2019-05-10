@@ -40,7 +40,7 @@ class AppContainer extends Component {
 
     componentDidMount(){
     
-        window.navigator.platform.indexOf('Mac') !== -1 && this.setState({
+        window.navigator.platform.indexOf('Win') !== -1 && this.setState({
             isWindows: true
         });
 

@@ -105,9 +105,17 @@
                 opacity: 1   
     .screen-toggle
         right: 20px
-        &.icon-minimize
+        &:before
+            transform-origin: center
+            +trans
+            
+        &.playerIn
             &:before
-                opacity: 1     
+                transform: rotate(0deg)    
+                
+        &.playerOut
+            &:before
+                transform: rotate(180deg)     
 
     .icon-play
         &:before

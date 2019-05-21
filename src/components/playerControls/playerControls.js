@@ -287,7 +287,7 @@ class Controls extends Component {
                         <button className="buttons__btn icon-skip-back" onClick={this.previousVideo}/>
                         <button className={`buttons__btn player-toggle ${this.state.playPauseStatus ? 'icon-pause' : 'icon-play'}`} onClick={this.switchPlayPause}/>
                         <button className="buttons__btn icon-skip-forward" onClick={this.nextVideo}/>
-                        <button className={`buttons__btn screen-toggle ${this.state.floatingScreen ? 'icon-minimize' : 'icon-maximize'}`} onClick={this.toggleScreen}/>
+                        <button className={`buttons__btn screen-toggle icon-pop-out ${this.state.floatingScreen ? 'playerOut' : 'playerIn'}`} onClick={this.toggleScreen}/>
                     </div>
                 </div>
             </div>

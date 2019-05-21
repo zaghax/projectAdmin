@@ -5,14 +5,7 @@ import SearchResults from '../searchResults/searchResults';
 import PlayList from '../playList/playList';
 import * as firebase from 'firebase';
 import {connect} from 'react-redux';
-const { remote, ipcRenderer } = window.require('electron');
-
-const {
-    CLOSE_MAIN_WINDOW,
-    MINIMIZE_MAIN_WINDOW,
-    TOGGLE_SIZE_MAIN_WINDOW
-} = require('../../utils/constants');
-
+const { remote } = window.require('electron');
 
 const config = {
     apiKey: "AIzaSyCkwdRv1u2LSarAY152iZgWL3H5RroueqM",
@@ -76,7 +69,6 @@ class AppContainer extends Component {
     }
 
     closeMainWindow = () => {
-        // ipcRenderer.send(CLOSE_MAIN_WINDOW);
         remote.app.quit();
     }
 
@@ -85,10 +77,6 @@ class AppContainer extends Component {
     }
 
     toggleSizeMainWindow = () => {
-        // this.setState({
-        //     isMaximized: !this.state.isMaximized
-        // })
-        // ipcRenderer.send(TOGGLE_SIZE_MAIN_WINDOW);
 
         const currentWindow = remote.getCurrentWindow();
         currentWindow.isMaximized() ? currentWindow.unmaximize() : currentWindow.maximize();
@@ -138,8 +126,7 @@ class AppContainer extends Component {
                                 )}
 
                                 {this.props.activeTab === 'suggestions' && (
-                                    // <SuggestedVideos/>
-                                    <h1>Desactivado</h1>
+                                    <SuggestedVideos/>
                                 )}
 
                             </div>

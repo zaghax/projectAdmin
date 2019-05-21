@@ -50,12 +50,7 @@
             align-items: center
             padding: 10px 0
             border-bottom: 1px solid $wt05
-            // opacity: 0
-            // @for $i from 1 through 50
-            //     &:nth-child(#{$i})
-            //         animation: fade 1s $i * 100ms ease-in-out
-            //         animation-fill-mode: forwards
-                    
+
             &__image
                 width: 40%
                 position: relative
@@ -63,7 +58,7 @@
                     width: 100%
                     display: block
                 .icon-play
-                    border: 2px solid $primary
+                    border: 2px solid $wt
                     width: 35px
                     height: 35px
                     border-radius: 50%
@@ -78,13 +73,15 @@
                     +trans
                     &:before
                         font-size: 20px
-                        color: $primary
-                        
+                        color: $wt
+                        transform: translateY(-1px)
+                        display: inline-block
                     &:hover
                         opacity: 1
+                        border-color: $primary
                         +boxRadiance($primary)
-
-
+                        &:before
+                            color: $primary
 
             &__title
                 width: 50%
@@ -132,8 +129,8 @@
                 &:hover
                     opacity: 1
                     &:before
-                        color: $primary
-                        +textRadiance($primary)
+                        color: $danger
+                        +textRadiance($danger)
                     span
                         opacity: 1
                 &:active

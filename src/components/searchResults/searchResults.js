@@ -10,19 +10,24 @@ class SearchResults extends Component {
     }
 
     addRemovePlaylistItem = (item, index) => {
-        if(this.btnRefs[index].classList.contains('icon-x')){
+        if(this.btnRefs[index].classList.contains('icon-trash-2')){
 
             const fbId = this.btnRefs[index].getAttribute("id");
             dbRefPlaylist.child(fbId).remove();
-            this.btnRefs[index].classList.add("icon-plus");
-            this.btnRefs[index].classList.remove("icon-x");
+            this.btnRefs[index].classList.remove("icon-trash-2");
+            this.btnRefs[index].classList.add("icon-playlist_add");
 
         }else{
             dbRefPlaylist.push(item).then((snap)=> {
 
-                this.btnRefs[index].classList.remove("icon-plus");
-                this.btnRefs[index].classList.add("icon-x");
+                this.btnRefs[index].classList.remove("icon-playlist_add");
+                this.btnRefs[index].classList.add("icon-check");
                 this.btnRefs[index].setAttribute("id", snap.key);
+
+                setTimeout(()=>{
+                    this.btnRefs[index].classList.remove("icon-check");
+                    this.btnRefs[index].classList.add("icon-trash-2");
+                }, 1000)
 
             });
         }
@@ -37,7 +42,7 @@ class SearchResults extends Component {
 
                     <div className="item__imageWrap">
                         <img className="item__image" src={item.snippet.thumbnails.medium.url} alt=""/>
-                        <button className="icon-plus item__add" onClick={() => { this.addRemovePlaylistItem(item, index)}} ref={((addBtn) => {this.btnRefs[index] = addBtn})}/>
+                        <button className="icon-playlist_add item__add" onClick={() => { this.addRemovePlaylistItem(item, index)}} ref={((addBtn) => {this.btnRefs[index] = addBtn})}/>
                     </div>
 
                     <div className="item__title" >
@@ -51,9 +56,15 @@ class SearchResults extends Component {
     }
     
     render(){
+
+        const {searchResults} = this.props;
+
         return(
             <div className="searchResults">
-                {this.printVideos(this.props.searchResults)}
+                {searchResults && searchResults !== undefined && this.printVideos(searchResults)}
+                {searchResults && searchResults === undefined &&
+                    <p className="errorMessage">Ohh fuck... <br/> Sorry, you can't search for videos now</p>
+                }
             </div>
         )
     }

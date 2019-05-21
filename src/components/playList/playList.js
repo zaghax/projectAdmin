@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {dbRefPlaylist} from '../appContainer/appContainer';
-const { remote, ipcRenderer } = window.require('electron');
+const { ipcRenderer } = window.require('electron');
 
 const {
     LOAD_VIDEO_FROM_PLAYLIST
@@ -57,7 +57,7 @@ class PlayList extends Component {
                         <p dangerouslySetInnerHTML={{__html: item.snippet.title}} />
                     </div>
                     <div className="item__controls">
-                        <button className="icon-x item__remove" onClick={() => {this.removeFromPlaylist(item.fbId)}}>
+                        <button className="icon-trash-2 item__remove" onClick={() => {this.removeFromPlaylist(item.fbId)}}>
                             <span>Remove from playlist</span>
                         </button>
                     </div>

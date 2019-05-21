@@ -45,23 +45,29 @@
                 opacity: 0.5
                 +trans
                 
-        .icon-x
-            &:before
-                color: $danger
-                opacity: 1
-                transform: scale(1.1)
-                +textRadiance($danger)
+            &.icon-trash-2
+                &:before
+                    color: $danger
+                    opacity: 1
+                    +textRadiance($danger)
+
+            &.icon-check
+                &:before
+                    color: $success
+                    opacity: 1
+                    +textRadiance($success)
 
         &:hover
             .item__image
                 transform: scale(1.1)
                 opacity: 1
-            .icon-plus
-                &:before
-                    color: $primary
-                    opacity: 1
-                    transform: scale(1.1)
-                    +textRadiance($primary)
+            .item__add
+                &.icon-playlist_add
+                    &:before
+                        color: $primary
+                        opacity: 1
+                        transform: scale(1.1)
+                        +textRadiance($primary)
 
         &__title
             background: $bl05

@@ -68,30 +68,33 @@
                 padding: 0
                 cursor: pointer
                 outline: none
-                opacity: 0.5
                 +trans
 
                 &:before
-                    color: $wt
                     font-size: 40px
                     +trans
 
-        .icon-plus
-            &:hover
-                opacity: 1
-                &:before
-                    color: $primary
-                    +textRadiance($primary)
-                span
-                    opacity: 1
-        .icon-x
-            opacity: 1
-            &:before
-                color: $danger
-                +textRadiance($danger)
+                &.icon-playlist_add
+                    opacity: 0.5
+                    &:before
+                        color: $wt
 
-                // &:active
-                //     transform: scale(0.9)
+                &.icon-trash-2
+                    &:before
+                        color: $danger
+                        +textRadiance($danger)
+
+                &.icon-check
+                    &:before
+                        color: $success
+                        +textRadiance($success)
+
+                &:hover
+                    &.icon-playlist_add
+                        opacity: 1
+                        &:before
+                            color: $primary
+                            +textRadiance($primary)
             
 
                     

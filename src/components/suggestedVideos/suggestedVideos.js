@@ -19,20 +19,24 @@ class SuggestedVideos extends Component {
     }
 
     addRemovePlaylistItem = (item, index) => {
-        
-        if(this.btnRefs[index].classList.contains('icon-x')){
+        if(this.btnRefs[index].classList.contains('icon-trash-2')){
 
             const fbId = this.btnRefs[index].getAttribute("id");
             dbRefPlaylist.child(fbId).remove();
-            this.btnRefs[index].classList.add("icon-plus");
-            this.btnRefs[index].classList.remove("icon-x");
+            this.btnRefs[index].classList.remove("icon-trash-2");
+            this.btnRefs[index].classList.add("icon-playlist_add");
 
         }else{
             dbRefPlaylist.push(item).then((snap)=> {
 
-                this.btnRefs[index].classList.remove("icon-plus");
-                this.btnRefs[index].classList.add("icon-x");
+                this.btnRefs[index].classList.remove("icon-playlist_add");
+                this.btnRefs[index].classList.add("icon-check");
                 this.btnRefs[index].setAttribute("id", snap.key);
+
+                setTimeout(()=>{
+                    this.btnRefs[index].classList.remove("icon-check");
+                    this.btnRefs[index].classList.add("icon-trash-2");
+                }, 1000)
 
             });
         }
@@ -80,36 +84,13 @@ class SuggestedVideos extends Component {
 
     }
 
-    // getPlayList = () => {
-
-    //     let list = [];
-    //     const keyList = Object.keys(this.props.fullPlayList);
-
-    //     keyList.map((item) => {
-    //         let itemObject = this.props.fullPlayList[item];
-    //         itemObject.fbId = item;
-    //         list.push(itemObject)
-    //     })
-
-    //     setTimeout(() => {
-    //         this.setState({
-    //             printCoverFlow: true
-    //         })
-    //     }, 1000)
-
-    //     this.setState({
-    //         suggestedVideos: list
-    //     })
-        
-    // }
-
     getSuggestedVideosList = (videos) => {
         return videos.map((item, index) => {
             return (
                 <div className="item" key={index}>
                     <div className="item__card">
                         <img className="item__image" src={item.snippet.thumbnails.high.url} alt={item.snippet.title}/>
-                        <button className="icon-plus item__add" onClick={() => { this.addRemovePlaylistItem(item, index)}} ref={((addBtn) => {this.btnRefs[index] = addBtn})}/>
+                        <button className="icon-playlist_add item__add" onClick={() => { this.addRemovePlaylistItem(item, index)}} ref={((addBtn) => {this.btnRefs[index] = addBtn})}/>
                         <div className="item__title" >
                             <p dangerouslySetInnerHTML={{__html: item.snippet.title}} />
                         </div>
@@ -120,10 +101,13 @@ class SuggestedVideos extends Component {
     } 
 
     render(){
+
+        const {printCoverFlow, suggestedVideos} = this.state;
+
         return (
             <div className="suggestedVideos">
                 <div className="item__list">
-                    {this.state.printCoverFlow &&
+                    {suggestedVideos && suggestedVideos !== undefined && printCoverFlow && 
                     
                         <Coverflow   
                             width={300}
@@ -140,6 +124,10 @@ class SuggestedVideos extends Component {
                             {this.getSuggestedVideosList(this.state.suggestedVideos)}
                         </Coverflow>
                         
+                    }
+
+                    {suggestedVideos && suggestedVideos == undefined &&
+                        <p className="errorMessage">Ohh shit... <br/> The suggested videos are fucked</p>
                     }
                     
                 </div>

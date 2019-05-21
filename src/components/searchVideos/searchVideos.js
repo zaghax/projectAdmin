@@ -21,6 +21,8 @@ class SearchVideos extends Component {
 
         const {searchValue} = this.state;
 
+        this.props.setSearchResults([]);
+
         const params = [
             `&maxResults=${15}`,
             `&q=${searchValue} musica`

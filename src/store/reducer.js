@@ -4,7 +4,8 @@ const initialState = {
     playListKeys: [],
     currentVideoData: {},
     currentObjectKey: '',
-    activeTab: 'suggestions'
+    searchPanelStatus: false,
+    searchWindowState: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -45,10 +46,16 @@ const reducer = (state = initialState, action) => {
                 currentObjectKey: action.value
             }
         
-        case 'SET_ACTIVE_TAB' :
+        case 'SET_SEARCH_PANEL_STATUS' :
             return {
                 ...state,
-                activeTab: action.value
+                searchPanelStatus: action.value
+            }
+
+        case 'SET_SEARCH_WINDOW_STATE' :
+            return {
+                ...state,
+                searchWindowState: action.value
             }
 
         default:

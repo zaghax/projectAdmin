@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Player from '../player/player';
-import SearchVideos from '../searchVideos/searchVideos';
 import {dbRefCurrentPlaying} from '../appContainer/appContainer';
 const { ipcRenderer } = window.require('electron');
 
@@ -272,7 +271,6 @@ class Controls extends Component {
                         className="info__name"
                         dangerouslySetInnerHTML={{ __html: currentVideoData.snippet.title }} />
                 </div>
-                <SearchVideos/>
                 <div className="controls">
                     <div className="time">
                         <span className="time__remaining">{this.state.videoRemaining}</span>
@@ -289,11 +287,12 @@ class Controls extends Component {
                         <button className="buttons__btn icon-skip-forward" onClick={this.nextVideo}/>
                         <button className={`buttons__btn screen-toggle icon-pop-out ${this.state.floatingScreen ? 'playerOut' : 'playerIn'}`} onClick={this.toggleScreen}/>
                     </div>
+                    <button className="icon-search search-toggle" onClick={() => {this.props.setSearchWindowState(true)}}/>
                 </div>
             </div>
         )
         
-    }
+    }  
 
     render(){
         const {floatingScreen} = this.state;
@@ -329,7 +328,8 @@ const mapStateToProps = state => {
 const mapDispathToProps = dispatch => {
     return {
         setCurrentVideoData: (value) => dispatch({type: 'SET_CURRENT_VIDEO_DATA', value: value}),
-        setCurrentObjectKey: (value) => dispatch({type: 'SET_CURRENT_OBJECT_KEY', value: value})
+        setCurrentObjectKey: (value) => dispatch({type: 'SET_CURRENT_OBJECT_KEY', value: value}),
+        setSearchWindowState: (value) => dispatch({type: 'SET_SEARCH_WINDOW_STATE', value: value})
     }
 }
 

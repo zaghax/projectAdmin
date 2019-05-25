@@ -1,8 +1,54 @@
 .searchResults
+    background-color: rgba($bl , 0.9)
+    position: absolute
+    z-index: 10
+    left: 0
+    top: 0
     width: 100%
+    height: 100%
+    padding: 10px
     display: flex
     flex-flow: row wrap
-    justify-content: space-around
+    justify-content: center
+    align-items: center
+    overflow: hidden
+    transform: translateX(-100%)
+    +trans
+    &.active
+        transform: translateX(0%)
+        .searchItems
+
+    .close-search-window
+        background: none
+        border: none
+        font-size: 22px
+        color: $primary
+        position: absolute
+        right: 10px
+        top: 10px
+        z-index: 1
+        cursor: pointer
+        outline: none
+        +textRadiance($secondary)
+        &:active
+            transform: scale(0.9)
+
+    .searchVideos
+        width: 90%
+        padding: 10px 0
+    
+    .searchItems
+        width: 90%
+        height: 0
+        padding: 10px
+        overflow-y: scroll 
+        display: none
+        flex-flow: row wrap
+        justify-content: space-around
+        +trans
+        &.active
+            display: flex
+            height: calc(100% - 100px)
 
     .item
         width: 17%
@@ -11,7 +57,7 @@
         margin: 10px 0
         overflow: hidden
         +boxRadiance(#00f3ff1f)
-        @for $i from 1 through 15
+        @for $i from 1 through 20
             &:nth-child(#{$i})
                 animation: fade 1s $i * 100ms ease-in-out
                 animation-fill-mode: forwards
@@ -38,6 +84,7 @@
             padding: 0
             margin: 0
             cursor: pointer
+            outline: none
             +trans
             &:before
                 font-size: 30px
@@ -81,3 +128,4 @@
                 margin: 0
                 padding: 0
                 font-size: 11px
+        

@@ -24,7 +24,7 @@ class SearchVideos extends Component {
         this.props.setSearchResults([]);
 
         const params = [
-            `&maxResults=${15}`,
+            `&maxResults=${20}`,
             `&q=${searchValue} musica`
             ];
 
@@ -34,7 +34,7 @@ class SearchVideos extends Component {
             this.props.setSearchResults(response.items);
         })
 
-        this.props.setToggleTab('search');
+        this.props.searchPanelStatus(true);
     }
 
     render(){
@@ -61,7 +61,7 @@ class SearchVideos extends Component {
 const mapDispathToProps = dispatch => {
     return {
         setSearchResults: (value) => dispatch({type: 'SET_SEARCH_RESULTS', value: value}),
-        setToggleTab: (value) => dispatch({type: 'SET_ACTIVE_TAB', value: value})
+        searchPanelStatus: (value) => dispatch({type: 'SET_SEARCH_PANEL_STATUS', value: value})
     }
 }
 

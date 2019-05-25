@@ -19,6 +19,7 @@ class SuggestedVideos extends Component {
     }
 
     addRemovePlaylistItem = (item, index) => {
+
         if(this.btnRefs[index].classList.contains('icon-trash-2')){
 
             const fbId = this.btnRefs[index].getAttribute("id");
@@ -27,6 +28,7 @@ class SuggestedVideos extends Component {
             this.btnRefs[index].classList.add("icon-playlist_add");
 
         }else{
+
             dbRefPlaylist.push(item).then((snap)=> {
 
                 this.btnRefs[index].classList.remove("icon-playlist_add");
@@ -39,7 +41,9 @@ class SuggestedVideos extends Component {
                 }, 1000)
 
             });
+
         }
+
     }
 
     componentDidMount(){
@@ -106,6 +110,7 @@ class SuggestedVideos extends Component {
 
         return (
             <div className="suggestedVideos">
+                <div className="head"><span>Suggested Videos</span></div>
                 <div className="item__list">
                     {suggestedVideos && suggestedVideos !== undefined && printCoverFlow && 
                     

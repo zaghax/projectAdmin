@@ -1,4 +1,5 @@
 import React , {Component} from 'react';
+import SearchVideos from '../searchVideos/searchVideos';
 import {connect} from 'react-redux';
 import {dbRefPlaylist} from '../appContainer/appContainer';
 
@@ -60,11 +61,15 @@ class SearchResults extends Component {
         const {searchResults} = this.props;
 
         return(
-            <div className="searchResults">
-                {searchResults && searchResults !== undefined && this.printVideos(searchResults)}
-                {searchResults && searchResults === undefined &&
-                    <p className="errorMessage">Ohh fuck... <br/> Sorry, you can't search for videos now</p>
-                }
+            <div className={`searchResults ${this.props.searchWindowState ? 'active' : ''}`}>
+                <button className="icon-x close-search-window" onClick={() => {this.props.setSearchWindowState(false)}}/>
+                <SearchVideos/>
+                <div className={`searchItems ${this.props.searchPanelStatus ? 'active' : ''}`}>
+                    {searchResults && searchResults !== undefined && this.printVideos(searchResults)}
+                    {searchResults && searchResults === undefined &&
+                        <p className="errorMessage">Ohh fuck... <br/> Sorry, you can't search for videos now</p>
+                    }
+                </div>
             </div>
         )
     }
@@ -73,8 +78,16 @@ class SearchResults extends Component {
 
 const mapStateToProps = state => {
     return {
-        searchResults: state.searchResults
+        searchResults: state.searchResults,
+        searchWindowState: state.searchWindowState,
+        searchPanelStatus: state.searchPanelStatus
     }
 }
 
-export default connect(mapStateToProps)(SearchResults);
+const mapDispathToProps = dispatch => {
+    return {
+        setSearchWindowState: (value) => dispatch({type: 'SET_SEARCH_WINDOW_STATE', value: value})
+    }
+}
+
+export default connect(mapStateToProps, mapDispathToProps)(SearchResults);

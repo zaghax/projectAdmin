@@ -42,10 +42,6 @@
         font-size: 16px
         color: $wt
 
-.searchVideos
-    width: 35%
-    padding: 10px
-
 .buttons
     width: 100%
     display: flex
@@ -205,3 +201,18 @@
         &__bar
             &:after
                 opacity: 1
+
+.search-toggle
+    background: none
+    border: none
+    font-size: 22px
+    color: $primary
+    position: absolute
+    right: 10px
+    top: 10px
+    z-index: 1
+    cursor: pointer
+    outline: none
+    +textRadiance($secondary)
+    &:active
+        transform: scale(0.9)

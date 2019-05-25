@@ -79,28 +79,19 @@ class AppContainer extends Component {
     toggleSizeMainWindow = () => {
 
         const currentWindow = remote.getCurrentWindow();
-        currentWindow.isMaximized() ? currentWindow.unmaximize() : currentWindow.maximize();
-        
-    }
 
-    getTabMenu = () => {
-        return (
-            <div className="tabList">
-                <ul className="tabList__items">
-                    <li className={`tabList__item ${this.props.activeTab === 'suggestions' ? 'active' : ''}`} onClick={() => {this.props.setToggleTab('suggestions')}}>
-                        <span>SUGGESTED VIDEOS</span>
-                    </li>
-                    <li className={`tabList__item ${this.props.activeTab === 'search' ? 'active' : ''}`} onClick={() => {this.props.setToggleTab('search')}}>
-                        <span>SEARCH RESULTS</span>
-                    </li>
-                </ul>
-            </div>
-        ) 
+        currentWindow.isMaximized() ? currentWindow.unmaximize() : currentWindow.maximize();
+
+        this.setState({
+            isMaximized: !this.state.isMaximized
+        });
+
     }
 
     render(){  
         return(
             <div className="appContainer">
+
                 <header className="header">
                     <span className="header__brandName">AWESOME PLAYER</span>
                     {this.state.isWindows && 
@@ -114,27 +105,18 @@ class AppContainer extends Component {
 
                 {this.state.showComponents && (
                     <div className="componentsWrap">
+
+                        <SearchResults/> 
+                        
                         <div className="columnLeft">
                             <PlayerControls/>
-
-                            {this.getTabMenu()}
-
-                            <div className="tabPaneContainer">
-                            
-                                {this.props.activeTab === 'search' && (
-                                    <SearchResults/> 
-                                )}
-
-                                {this.props.activeTab === 'suggestions' && (
-                                    <SuggestedVideos/>
-                                )}
-
-                            </div>
-
+                            <SuggestedVideos /> 
                         </div>
+
                         <div className="columnRight">
                             <PlayList/>
                         </div>
+
                     </div>
                 )} 
             </div>
@@ -148,8 +130,7 @@ const mapStateToProps = state => {
         fullPlayList: state.fullPlayList,
         playListKeys: state.playListKeys,
         currentVideoData: state.currentVideoData,
-        currentObjectKey: state.currentObjectKey,
-        activeTab: state.activeTab
+        currentObjectKey: state.currentObjectKey
     }
 }
 
@@ -158,8 +139,7 @@ const mapDispathToProps = dispatch => {
         setFullPlayList: (value) => dispatch({type: 'SET_FULL_PLAYLIST', value: value}),
         setPlayListKeys: (value) => dispatch({type: 'SET_PLAYLIST_KEYS', value: value}),
         setCurrentVideoData: (value) => dispatch({type: 'SET_CURRENT_VIDEO_DATA', value: value}),
-        setCurrentObjectKey: (value) => dispatch({type: 'SET_CURRENT_OBJECT_KEY', value: value}),
-        setToggleTab: (value) => dispatch({type: 'SET_ACTIVE_TAB', value: value})
+        setCurrentObjectKey: (value) => dispatch({type: 'SET_CURRENT_OBJECT_KEY', value: value})
     }
 }
 

@@ -14,16 +14,16 @@ class PlayList extends Component {
     }
 
     scrollTop = () => {
-        document.querySelector('.item__list').scrollTop = 0;
+        document.getElementById('videoPlayList').scrollTop = 0;
     }
 
-    scrollBottom = () => {
-        let scrollHeight = document.querySelector('.item__list').scrollHeight
-        document.querySelector('.item__list').scrollTop = scrollHeight;
+    scrollBottom = () => {      
+        let scrollHeight = document.getElementById('videoPlayList').scrollHeight;
+        document.getElementById('videoPlayList').scrollTop = scrollHeight;
     }
 
     scrollListener = () => {
-        if(document.querySelector('.item__list').scrollTop > 200){
+        if(document.getElementById('videoPlayList').scrollTop > 200){
             document.querySelector('.icon-chevrons-up').classList.add('active');
         }else{
             document.querySelector('.icon-chevrons-up').classList.remove('active');
@@ -76,7 +76,7 @@ class PlayList extends Component {
                         <button className="icon-chevrons-down scroll__btn" onClick={this.scrollBottom}/>
                     </div>
                 </div>
-                <div className="item__list" onScroll={this.scrollListener}>
+                <div className="item__list" id="videoPlayList" onScroll={this.scrollListener}>
                     {this.getPlayList()}
                 </div>
             </div>

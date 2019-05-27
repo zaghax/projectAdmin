@@ -57,10 +57,12 @@ class AppContainer extends Component {
                     }
                 })
                
-                this.setState({
-                    isLoadFirstVideo: false,
-                    showComponents: true
-                })
+                setTimeout(() => {
+                    this.setState({
+                        isLoadFirstVideo: false,
+                        showComponents: true
+                    })
+                }, 2000)
            
             }
 
@@ -103,6 +105,12 @@ class AppContainer extends Component {
                     }
                 </header>
 
+                {!this.state.showComponents && 
+                    <div className="loader">
+                        <i className="icon-loader"/>
+                    </div>
+                }
+
                 {this.state.showComponents && (
                     <div className="componentsWrap">
 
@@ -110,7 +118,7 @@ class AppContainer extends Component {
                         
                         <div className="columnLeft">
                             <PlayerControls/>
-                            <SuggestedVideos /> 
+                            <SuggestedVideos />
                         </div>
 
                         <div className="columnRight">

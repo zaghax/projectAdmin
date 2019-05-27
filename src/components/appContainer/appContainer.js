@@ -5,7 +5,12 @@ import SearchResults from '../searchResults/searchResults';
 import PlayList from '../playList/playList';
 import * as firebase from 'firebase';
 import {connect} from 'react-redux';
-const { remote } = window.require('electron');
+const { remote, ipcRenderer } = window.require('electron');
+
+const {
+    MAIN_WINDOW_MAXIMIZED_STATE
+} = require('../../utils/constants');
+
 
 const config = {
     apiKey: "AIzaSyCkwdRv1u2LSarAY152iZgWL3H5RroueqM",
@@ -33,7 +38,7 @@ class AppContainer extends Component {
 
     componentDidMount(){
     
-        window.navigator.platform.indexOf('Win') !== -1 && this.setState({
+        window.navigator.platform.indexOf('Mac') !== -1 && this.setState({
             isWindows: true
         });
 
@@ -66,6 +71,13 @@ class AppContainer extends Component {
            
             }
 
+        });
+
+        ipcRenderer.on(MAIN_WINDOW_MAXIMIZED_STATE, () => {
+            this.setState({
+                isMaximized: true
+            });
+            console.log('tomalo maximized')
         });
         
     }

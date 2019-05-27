@@ -21,16 +21,17 @@ const {
     SET_PROGRESS_BAR_STATUS,
     SEEK_TO,
     PLAYER_READY,
-    CLOSE_MAIN_WINDOW,
-    MINIMIZE_MAIN_WINDOW,
-    TOGGLE_SIZE_MAIN_WINDOW,
+    // CLOSE_MAIN_WINDOW,
+    // MINIMIZE_MAIN_WINDOW,
+    // TOGGLE_SIZE_MAIN_WINDOW,
     LOAD_VIDEO_FROM_PLAYLIST,
-    TOGGLE_MUTE
+    TOGGLE_MUTE,
+    MAIN_WINDOW_MAXIMIZED_STATE
 } = require('../src/utils/constants');
 
 let mainWindow;
 let playerWindow;
-let toggleSizeMainWindow = true;
+// let toggleSizeMainWindow = true;
 
 function createWindow() {
     BrowserWindow.addDevToolsExtension(
@@ -48,9 +49,15 @@ function createWindow() {
         frame: false
     });
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
-    mainWindow.on('closed', () => mainWindow = null);
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+        playerWindow.close();
+    });
+    mainWindow.on('maximize', () => {
+        mainWindow.send(MAIN_WINDOW_MAXIMIZED_STATE);
+    });
     mainWindow.setMenu(null);
-    //   mainWindow.webContents.openDevTools(); 
+    mainWindow.webContents.openDevTools(); 
 }
 
 function createPlayerWindow () {
@@ -64,7 +71,7 @@ function createPlayerWindow () {
     playerWindow.loadURL(isDev ? 'http://localhost:3000/player' : `file://${path.join(__dirname, '../build/index.html/player')}`);
     playerWindow.on('closed', () => {
         playerWindow = null;
-        mainWindow.send(PLAYER_WINDOW_CLOSED);
+        mainWindow !== null && mainWindow.send(PLAYER_WINDOW_CLOSED);
     });
     playerWindow.setMenu(null);
 }
@@ -109,18 +116,18 @@ ipcMain.on(PLAYER_READY, () => {
     mainWindow.send(PLAYER_READY);
 });
 
-ipcMain.on(CLOSE_MAIN_WINDOW, () => {
-    mainWindow.close();
-});
+// ipcMain.on(CLOSE_MAIN_WINDOW, () => {
+//     mainWindow.close();
+// });
 
-ipcMain.on(MINIMIZE_MAIN_WINDOW, () => {
-    mainWindow.minimize();
-});
+// ipcMain.on(MINIMIZE_MAIN_WINDOW, () => {
+//     mainWindow.minimize();
+// });
 
-ipcMain.on(TOGGLE_SIZE_MAIN_WINDOW, () => {
-    toggleSizeMainWindow ? mainWindow.maximize() : mainWindow.unmaximize();
-    toggleSizeMainWindow = !toggleSizeMainWindow;
-});
+// ipcMain.on(TOGGLE_SIZE_MAIN_WINDOW, () => {
+//     toggleSizeMainWindow ? mainWindow.maximize() : mainWindow.unmaximize();
+//     toggleSizeMainWindow = !toggleSizeMainWindow;
+// });
 
 ipcMain.on(LOAD_VIDEO_FROM_PLAYLIST, (event, listId) => {
     mainWindow.send(LOAD_VIDEO_FROM_PLAYLIST, listId);

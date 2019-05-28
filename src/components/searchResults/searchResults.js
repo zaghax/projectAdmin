@@ -66,7 +66,7 @@ class SearchResults extends Component {
                 <SearchVideos/>
                 <div className={`searchItems ${this.props.searchPanelStatus ? 'active' : ''}`}>
                     {searchResults && searchResults !== undefined && this.printVideos(searchResults)}
-                    {searchResults && searchResults === undefined &&
+                    {searchResults === undefined &&
                         <p className="errorMessage">Ohh fuck... <br/> Sorry, you can't search for videos now</p>
                     }
                 </div>

@@ -131,7 +131,7 @@ class SuggestedVideos extends Component {
                         
                     }
 
-                    {suggestedVideos && suggestedVideos == undefined &&
+                    {suggestedVideos === undefined &&
                         <p className="errorMessage">Ohh shit... <br/> The suggested videos are fucked</p>
                     }
                     

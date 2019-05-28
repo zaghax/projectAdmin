@@ -12,5 +12,6 @@ module.exports = {
     PLAYER_READY: 'player-ready',
     LOAD_VIDEO_FROM_PLAYLIST: 'load-video-from-playlist',
     TOGGLE_MUTE: 'toggle-mute',
-    MAIN_WINDOW_MAXIMIZED_STATE: 'main-window-maximized-state'
+    MAIN_WINDOW_MAXIMIZED_STATE: 'main-window-maximized-state',
+    MAIN_WINDOW_UNMAXIMIZED_STATE: 'main-window-unmaximized-state'
 };

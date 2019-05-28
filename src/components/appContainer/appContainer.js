@@ -38,7 +38,7 @@ class AppContainer extends Component {
 
     componentDidMount(){
     
-        window.navigator.platform.indexOf('Mac') !== -1 && this.setState({
+        window.navigator.platform.indexOf('Win') !== -1 && this.setState({
             isWindows: true
         });
 
@@ -73,11 +73,18 @@ class AppContainer extends Component {
 
         });
 
+        //This is when is maximized or unmaximized by head doubleclick on Windows OS 
+
         ipcRenderer.on(MAIN_WINDOW_MAXIMIZED_STATE, () => {
             this.setState({
                 isMaximized: true
             });
-            console.log('tomalo maximized')
+        });
+
+        ipcRenderer.on(MAIN_WINDOW_UNMAXIMIZED_STATE, () => {
+            this.setState({
+                isMaximized: false
+            });
         });
         
     }

@@ -26,7 +26,8 @@ const {
     // TOGGLE_SIZE_MAIN_WINDOW,
     LOAD_VIDEO_FROM_PLAYLIST,
     TOGGLE_MUTE,
-    MAIN_WINDOW_MAXIMIZED_STATE
+    MAIN_WINDOW_MAXIMIZED_STATE,
+    MAIN_WINDOW_UNMAXIMIZED_STATE
 } = require('../src/utils/constants');
 
 let mainWindow;
@@ -55,6 +56,9 @@ function createWindow() {
     });
     mainWindow.on('maximize', () => {
         mainWindow.send(MAIN_WINDOW_MAXIMIZED_STATE);
+    });
+    mainWindow.on('unmaximize', () => {
+        mainWindow.send(MAIN_WINDOW_UNMAXIMIZED_STATE);
     });
     mainWindow.setMenu(null);
     mainWindow.webContents.openDevTools(); 

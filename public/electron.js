@@ -21,9 +21,6 @@ const {
     SET_PROGRESS_BAR_STATUS,
     SEEK_TO,
     PLAYER_READY,
-    // CLOSE_MAIN_WINDOW,
-    // MINIMIZE_MAIN_WINDOW,
-    // TOGGLE_SIZE_MAIN_WINDOW,
     LOAD_VIDEO_FROM_PLAYLIST,
     TOGGLE_MUTE,
     MAIN_WINDOW_MAXIMIZED_STATE,
@@ -32,7 +29,6 @@ const {
 
 let mainWindow;
 let playerWindow;
-// let toggleSizeMainWindow = true;
 
 function createWindow() {
     BrowserWindow.addDevToolsExtension(
@@ -40,7 +36,7 @@ function createWindow() {
     ); 
     BrowserWindow.addDevToolsExtension(
         path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0')
-    ); 
+    );
     mainWindow = new BrowserWindow({
         width: 960,
         height: 680,
@@ -52,7 +48,7 @@ function createWindow() {
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
     mainWindow.on('closed', () => {
         mainWindow = null;
-        playerWindow !== null && playerWindow.close();
+        playerWindow !== null && playerWindow !== undefined && playerWindow.close();
     });
     mainWindow.on('maximize', () => {
         mainWindow.send(MAIN_WINDOW_MAXIMIZED_STATE);
@@ -61,7 +57,7 @@ function createWindow() {
         mainWindow.send(MAIN_WINDOW_UNMAXIMIZED_STATE);
     });
     mainWindow.setMenu(null);
-    mainWindow.webContents.openDevTools(); 
+    //mainWindow.webContents.openDevTools(); 
 }
 
 function createPlayerWindow () {
@@ -75,7 +71,7 @@ function createPlayerWindow () {
     playerWindow.loadURL(isDev ? 'http://localhost:3000/player' : `file://${path.join(__dirname, '../build/index.html/player')}`);
     playerWindow.on('closed', () => {
         playerWindow = null;
-        mainWindow !== null && mainWindow.send(PLAYER_WINDOW_CLOSED);
+        mainWindow !== null && mainWindow !== undefined && mainWindow.send(PLAYER_WINDOW_CLOSED);
     });
     playerWindow.setMenu(null);
 }
@@ -119,19 +115,6 @@ ipcMain.on(SEEK_TO, (event, seekTime) => {
 ipcMain.on(PLAYER_READY, () => {
     mainWindow.send(PLAYER_READY);
 });
-
-// ipcMain.on(CLOSE_MAIN_WINDOW, () => {
-//     mainWindow.close();
-// });
-
-// ipcMain.on(MINIMIZE_MAIN_WINDOW, () => {
-//     mainWindow.minimize();
-// });
-
-// ipcMain.on(TOGGLE_SIZE_MAIN_WINDOW, () => {
-//     toggleSizeMainWindow ? mainWindow.maximize() : mainWindow.unmaximize();
-//     toggleSizeMainWindow = !toggleSizeMainWindow;
-// });
 
 ipcMain.on(LOAD_VIDEO_FROM_PLAYLIST, (event, listId) => {
     mainWindow.send(LOAD_VIDEO_FROM_PLAYLIST, listId);

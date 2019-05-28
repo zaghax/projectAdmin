@@ -8,7 +8,8 @@ import {connect} from 'react-redux';
 const { remote, ipcRenderer } = window.require('electron');
 
 const {
-    MAIN_WINDOW_MAXIMIZED_STATE
+    MAIN_WINDOW_MAXIMIZED_STATE,
+    MAIN_WINDOW_UNMAXIMIZED_STATE
 } = require('../../utils/constants');
 
 

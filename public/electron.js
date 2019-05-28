@@ -52,7 +52,7 @@ function createWindow() {
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
     mainWindow.on('closed', () => {
         mainWindow = null;
-        playerWindow.close();
+        playerWindow !== null && playerWindow.close();
     });
     mainWindow.on('maximize', () => {
         mainWindow.send(MAIN_WINDOW_MAXIMIZED_STATE);

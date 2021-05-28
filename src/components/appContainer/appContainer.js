@@ -3,7 +3,8 @@ import PlayerControls from '../playerControls/playerControls';
 import SuggestedVideos from '../suggestedVideos/suggestedVideos';
 import SearchResults from '../searchResults/searchResults';
 import PlayList from '../playList/playList';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/database';
 import {connect} from 'react-redux';
 const { remote, ipcRenderer } = window.require('electron');
 
@@ -50,6 +51,8 @@ class AppContainer extends Component {
 
             this.props.setFullPlayList(fullPlayList);
             this.props.setPlayListKeys(playListKeys);
+
+            console.log('fullPlayList', fullPlayList);
 
             if(this.state.isLoadFirstVideo){
 

@@ -32,7 +32,7 @@ class SearchVideos extends Component {
         .then((response) => response.json())
         .then(response => {
             this.props.setSearchResults(response.items);
-        })
+        }).catch(error => console.log('Error', error));
 
         this.props.searchPanelStatus(true);
     }

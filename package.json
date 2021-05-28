@@ -4,9 +4,10 @@
   "private": true,
   "dependencies": {
     "concurrently": "^4.1.0",
-    "electron": "^4.1.4",
-    "electron-builder": "^20.39.0",
-    "electron-is-dev": "^1.1.0",
+    "electron": "^4.2.12",
+    "electron-builder": "^20.44.4",
+    "electron-is-dev": "^1.2.0",
+    "firebase": "^8.6.2",
     "react": "^16.8.6",
     "react-coverflow": "^0.2.20",
     "react-dom": "^16.8.6",
@@ -35,8 +36,7 @@
   ],
   "main": "public/electron.js",
   "devDependencies": {
-    "firebase": "^5.9.3",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.14.1",
     "react-electron-browser-window": "^0.1.2",
     "react-new-window": "0.0.12",
     "react-youtube": "^7.9.0"

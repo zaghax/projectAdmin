@@ -84,23 +84,38 @@ class SuggestedVideos extends Component {
                 suggestedVideos: response.items,
                 printCoverFlow: true
             })
-        });
+            console.log(response.items)
+        }).catch(error => console.log('Error', error));
 
     }
 
     getSuggestedVideosList = (videos) => {
         return videos.map((item, index) => {
-            return (
-                <div className="item" key={index}>
-                    <div className="item__card">
-                        <img className="item__image" src={item.snippet.thumbnails.high.url} alt={item.snippet.title}/>
-                        <button className="icon-playlist_add item__add" onClick={() => { this.addRemovePlaylistItem(item, index)}} ref={((addBtn) => {this.btnRefs[index] = addBtn})}/>
-                        <div className="item__title" >
-                            <p dangerouslySetInnerHTML={{__html: item.snippet.title}} />
+            
+            if (item.snippet){
+
+                return (
+                    <div className="item" key={index}>
+                        <div className="item__card">
+                            <img className="item__image" src={item.snippet.thumbnails.high.url} alt={item.snippet.title}/>
+                            <button className="icon-playlist_add item__add" onClick={() => { this.addRemovePlaylistItem(item, index)}} ref={((addBtn) => {this.btnRefs[index] = addBtn})}/>
+                            <div className="item__title" >
+                                <p dangerouslySetInnerHTML={{__html: item.snippet.title}} />
+                            </div>
                         </div>
                     </div>
-                </div>
-            ) 
+                ) 
+                
+            }else {
+                return(
+                    <div className="item" key={index}>
+                        <div className="item__novideo">
+                            <h1 className="novideo__title">Video no available</h1>
+                        </div>
+                    </div>
+                )   
+            }
+            
         })
     } 
 
@@ -132,7 +147,7 @@ class SuggestedVideos extends Component {
                     }
 
                     {suggestedVideos === undefined &&
-                        <p className="errorMessage">Ohh shit... <br/> The suggested videos are fucked</p>
+                        <p className="errorMessage">Videos not available</p>
                     }
                     
                 </div>

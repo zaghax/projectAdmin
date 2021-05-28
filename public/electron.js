@@ -31,12 +31,12 @@ let mainWindow;
 let playerWindow;
 
 function createWindow() {
-    BrowserWindow.addDevToolsExtension(
-        path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/3.6.0_0')
-    ); 
-    BrowserWindow.addDevToolsExtension(
-        path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0')
-    );
+    // BrowserWindow.addDevToolsExtension(
+    //     path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/3.6.0_0')
+    // ); 
+    // BrowserWindow.addDevToolsExtension(
+    //     path.join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0')
+    // );
     mainWindow = new BrowserWindow({
         width: 960,
         height: 680,

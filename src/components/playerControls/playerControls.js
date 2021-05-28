@@ -141,6 +141,8 @@ class Controls extends Component {
             key = playListKeys[playingIndex];
         }
 
+        console.log('fullPlayList',fullPlayList)
+
         floatingScreen ?  ipcRenderer.send(LOAD_VIDEO, fullPlayList[key].id.videoId ) : this.child.loadVideo(fullPlayList[key].id.videoId);
 
         this.props.setCurrentVideoData(fullPlayList[key]);
@@ -262,6 +264,8 @@ class Controls extends Component {
     getControls = () => {
 
         const { currentVideoData } = this.props;
+
+        // console.log('videoInfo', currentVideoData)
 
         return (
             <div className="playerControls">
